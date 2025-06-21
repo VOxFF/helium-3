@@ -1,0 +1,40 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug Helium",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/build/main.app",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        "miDebuggerPath": "/usr/bin/gdb",
+        "preLaunchTask": "Build Helium",
+        "setupCommands": [
+          {
+            "description": "Enable pretty-printing for gdb",
+            "text": "-enable-pretty-printing",
+            "ignoreFailures": true
+          }
+        ]
+      },
+      {
+        "name": "Run Helium",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/build/main.app",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}",
+        "MIMode": "gdb",
+        "miDebuggerPath": "/usr/bin/gdb",
+        "preLaunchTask": "Build Helium",
+        "externalConsole": false
+      }
+    ]
+  }
+  
