@@ -10,7 +10,6 @@
   
         "includePath": [
           "${workspaceFolder}/simulation",          
-          "${workspaceFolder}/simulation/common",   
           "${workspaceFolder}/**"                   
         ]
       }

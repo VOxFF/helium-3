@@ -19,7 +19,8 @@
  */
 
 #pragma once
-#include "simulation/interfaces/IMachine.h"
+#include "interfaces/IMachine.h"
+#include "common/Event.h"
 
 namespace Helium3 {
 
@@ -34,6 +35,15 @@ namespace Helium3 {
 class ITruck : public IMachine {
 public:
     virtual ~ITruck() = default;
+
+    
+    virtual Event startMining() = 0;
+    virtual Event driveToStation() = 0;
+    virtual Event checkinAtStation() = 0;
+    virtual Event startWaiting() = 0;
+    virtual Event unload() = 0;
+    virtual Event driveToMining() = 0;
+
 
     // --- future truck-specific API will appear here ---
 };

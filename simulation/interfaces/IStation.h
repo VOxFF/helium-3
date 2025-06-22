@@ -10,7 +10,8 @@
  */
 
 #pragma once
-#include "simulation/interfaces/IMachine.h"
+#include "interfaces/IMachine.h"
+#include "common/Event.h"
 
 namespace Helium3 {
 
@@ -27,6 +28,8 @@ class IStation {
 public:
     virtual ~IStation() = default;
 
+    virtual size_t length() const = 0;
+
     /**
      * @brief  Accept a truck into the station’s processing queue.
      *
@@ -34,7 +37,8 @@ public:
      *               transferred; the simulation still manages the truck’s
      *               lifetime.
      */
-    virtual void enqueue(const ITruck& truck) = 0;
+    virtual Event enqueue(const ITruck& truck) = 0;
+    virtual Event dequeue() = 0;
 };
 
 } // namespace Helium3

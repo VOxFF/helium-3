@@ -3,16 +3,13 @@
     "tasks": [
       {
         "label": "Build Helium",
-        "type": "shell",
+        "type":  "shell",
         "command": "bash",
         "args": [
           "-c",
-          "mkdir -p build && clang++ -g main.cpp -o build/main.app"
+          "shopt -s globstar nullglob && mkdir -p build && clang++ -std=c++20 -g -I./simulation **/*.cpp -o build/main.app"
         ],
-        "group": {
-          "kind": "build",
-          "isDefault": true
-        },
+        "group": { "kind": "build", "isDefault": true },
         "problemMatcher": ["$gcc"]
       }
     ]
