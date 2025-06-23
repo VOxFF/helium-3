@@ -3,22 +3,22 @@
  * @brief  Interface that marks a machine as a *truck* in the Helium-3
  *         simulation.
  *
- * `ITruck` currently adds **no additional pure-virtual functions** on top of
- * the generic @ref Helium3::IMachine contract; a mining truck behaves like any
- * other powered unit (it can be powered on/off, updated every tick, queried
- * for state, and provide a log).
+ * `ITruck` currently adds **additional virtual functions** on top of the
+ * generic @ref Helium3::IMachine contract that represent major
+ * lifecycle transitions in truck behavior.
  *
- * The type nonetheless exists as an **extension point** for future more realistic
- * simulations like:
+ * The interface exists as an **extension point** for more realistic
+ * future simulations, for example:
  *   - `double capacity() const` — payload mass   
  *   - `double velocity() const` — current ground speed 
-  *
+ *
  * By introducing those methods here later, concrete classes (`MiningTruck`,
- * `ServiceTruck`, etc.) inherit them automatically without changing unrelated
- * machine classes.
+ * `ServiceTruck`, etc.) inherit them automatically without requiring changes
+ * to unrelated machine types.
  */
 
 #pragma once
+
 #include "interfaces/IMachine.h"
 #include "common/Event.h"
 
@@ -26,24 +26,33 @@ namespace Helium3 {
 
 /**
  * @class ITruck
- * @brief Tag-interface for all vehicle-type machines.
+ * @brief Interface for all truck-type machines in the simulation.
  *
- * At present the interface is empty because the simulation requirements are
- * satisfied by the base @ref IMachine API alone.  New truck-specific queries
- * or commands can be appended without disturbing non-truck code.
+ * Defines truck-specific state transitions as event-generating actions.
+ * These simulate the behavior of an autonomous vehicle mining and
+ * unloading Helium-3.
  */
 class ITruck : public IMachine {
 public:
     virtual ~ITruck() = default;
 
-    
+    /// Begin mining at a site.
     virtual Event startMining() = 0;
-    virtual Event driveToStation() = 0;
-    virtual Event checkinAtStation() = 0;
-    virtual Event startWaiting() = 0;
-    virtual Event unload() = 0;
-    virtual Event driveToMining() = 0;
 
+    /// Begin travel from site to station.
+    virtual Event driveToStation() = 0;
+
+    /// Arrive at the station.
+    virtual Event checkinAtStation() = 0;
+
+    /// Wait in queue to unload.
+    virtual Event startWaiting() = 0;
+
+    /// Unload Helium-3 at station.
+    virtual Event unload() = 0;
+
+    /// Return to the mining site.
+    virtual Event driveToMining() = 0;
 
     // --- future truck-specific API will appear here ---
 };

@@ -24,11 +24,11 @@ class ITruck;
  * Stations should also participate in the global update loop (i.e., are
  * energised machines with state/logging).
  */
-class IStation {
+class IStation : public IMachine {
 public:
     virtual ~IStation() = default;
 
-    virtual size_t length() const = 0;
+    virtual size_t count() const = 0;
 
     /**
      * @brief  Accept a truck into the station’s processing queue.
@@ -37,7 +37,7 @@ public:
      *               transferred; the simulation still manages the truck’s
      *               lifetime.
      */
-    virtual Event enqueue(const ITruck& truck) = 0;
+    virtual Event enqueue(ITruck* truck) = 0;
     virtual Event dequeue() = 0;
 };
 

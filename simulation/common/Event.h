@@ -7,9 +7,14 @@
 #include "common/State.h"
 #include "common/Time.h"
 
+#include <functional>
+#include <optional>
+
 namespace Helium3 {
 
-class ITruck;
+struct Event;
+
+using EventCallback = std::function<std::optional<Event>(void)>; 
 
 /**
  * @struct Event
@@ -21,13 +26,13 @@ class ITruck;
  * durations—bubble to the top.
  */
 struct Event {
-    Time        start;      ///< absolute simulation time the event begins
-    Duration    duration;   ///< how long the event lasts
-    ITruck&     truck;      ///< truck involved in this event (non-owning)
+    Time        start;          ///< absolute simulation time the event begins
+    Duration    duration;       ///< how long the event lasts
+    EventCallback onExpiration; ///< trigger when event is pulled out of queue (i.e. expired)
 
     /// Construct an event.
-    Event(Time start, Duration duration, ITruck& truck)
-        : start(std::move(start)), duration(std::move(duration)), truck(truck) {}
+    Event(Time start, Duration duration, /*ITruck& truck*/ EventCallback onExpiration = {})
+        : start(std::move(start)), duration(std::move(duration)), /*truck(truck)*/ onExpiration(onExpiration) {}
 
     virtual ~Event() = default;
 
