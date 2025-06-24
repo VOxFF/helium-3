@@ -1,7 +1,6 @@
 #pragma once
 #include <chrono>
 
-
 namespace Helium3 {
 
 using Clock = std::chrono::system_clock;                // pick a clock

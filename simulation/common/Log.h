@@ -7,7 +7,6 @@
 #include <utility>
 #include <vector>
 
-
 namespace Helium3 {
 
 class Log {

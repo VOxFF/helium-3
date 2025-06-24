@@ -1,7 +1,9 @@
 #pragma once
 
 #include "interfaces/ISimulation.h"
+#include "interfaces/ITruck.h"
 #include "common/Event.h"
+
 
 #include <vector>
 #include <memory>
@@ -14,7 +16,16 @@ class IStationsManager;
 
 class Simulation : public ISimulation {
 public:
-    Simulation();
+    /**
+     * @brief Constructs the Simulation with a custom truck factory.
+     *
+     * Supplies a custom truck factory to the Simulation, allowing override
+     * of default `MiningTruck` creation. This is particularly useful for
+     * injecting customized truck classes in testing scenarios.
+     *
+     * @param factory Optional factory function used to create truck instances.
+     */
+    Simulation(const TruckFactory& factory = {});
     virtual ~Simulation() = default;
 
     // --- From ISimulation ---

@@ -30,18 +30,20 @@ const std::string& MiningTruck::stateName(MiningTruck::StateID id) {
     return (it != STATE_NAMES.end()) ? it->second : idle;
 }
 
+Duration MiningTruck::miningTime() const 
+{
+    static std::mt19937 rng(std::random_device{}());
+    static std::uniform_real_distribution<double> dist(MINING_TIME_MIN.count(), MINING_TIME_MAX.count());
+    return std::chrono::duration_cast<Duration>(std::chrono::duration<double>(dist(rng)));
+}
+
 Event MiningTruck::startMining() {
     assert(m_state == Idle || m_state == MovingToMining);
     m_state = Mining;
 
-    
-    static std::mt19937 rng(std::random_device{}());
-    static std::uniform_real_distribution<double> dist(MINING_TIME_MIN.count(), MINING_TIME_MAX.count());
-    auto duration = std::chrono::duration_cast<Duration>(std::chrono::duration<double>(dist(rng)));
-
     return Event(
         Time{}, // time to be set externally
-        duration, 
+        miningTime(), 
         [this]() { return driveToStation(); }
     );
 }

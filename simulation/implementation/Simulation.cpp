@@ -7,8 +7,8 @@
 
 namespace Helium3 {
 
-Simulation::Simulation() 
-: m_trucksManager(std::make_unique<TrucksManager>())
+Simulation::Simulation(const TruckFactory& factory) 
+: m_trucksManager(std::make_unique<TrucksManager>(factory))
 , m_stationsManager(std::make_unique<StationsManager>()) {}
 
 void Simulation::initialize(unsigned int truckCount, unsigned int stationCount) 
@@ -38,11 +38,12 @@ void Simulation::run(const Duration& simulationLength)
         if(!event.onExpiration)
             continue; // no action to perform
 
-        if (auto nextOpt = event.onExpiration(); nextOpt.has_value()) {
-                auto next = nextOpt.value();
-                next.start = curTime;
-                m_eventQueue.push(next);
-            }
+        if (auto nextOpt = event.onExpiration(); nextOpt.has_value()) 
+        {
+            auto next = nextOpt.value();
+            next.start = curTime;
+            m_eventQueue.push(next);
+        }
     
     }
 }

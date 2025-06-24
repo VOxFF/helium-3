@@ -14,7 +14,7 @@ void TrucksManager::initialize(unsigned int truckCount)
 {
     assert(m_trucks.empty());
     for(auto i = 0; i < truckCount; i++)
-        m_trucks.emplace_back(std::make_shared<MiningTruck>(PREFIX + std::to_string(i)));
+        m_trucks.emplace_back(m_truckFactory ? m_truckFactory(i) : std::make_shared<MiningTruck>(PREFIX + std::to_string(i)));
 }
 
 std::vector<ITruck*> TrucksManager::trucks() const 

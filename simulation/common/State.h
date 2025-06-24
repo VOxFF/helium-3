@@ -10,5 +10,4 @@ namespace Helium3 {
  */
 using State = int;
 
-
 } //end of namespace Helium3

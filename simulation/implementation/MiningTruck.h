@@ -39,6 +39,20 @@ public:
 
     // --- Future truck-specific API will appear here ---
 
+protected:
+    /**
+     * @brief Returns the duration of the mining operation.
+     *
+     * The default implementation returns a random time in the range between
+     * 1 and 5 hours. However, for testing purposes, overriding this method
+     * in test-specific subclasses (e.g., `TestTruck`) can provide fixed durations
+     * for more predictable behavior.
+     *
+     * @return Duration of the mining operation.
+     */
+    virtual Duration miningTime() const;
+
+
 private:
     std::string m_id;
     State m_state;

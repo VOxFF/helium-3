@@ -22,6 +22,8 @@
 #include "interfaces/IMachine.h"
 #include "common/Event.h"
 
+#include <memory>
+
 namespace Helium3 {
 
 /**
@@ -56,5 +58,13 @@ public:
 
     // --- future truck-specific API will appear here ---
 };
+
+/**
+ * @brief Factory function used to create custom truck instances.
+ * 
+ * Primarily useful in testing to override the default behavior of
+ * `MiningTruck` by supplying custom truck implementations.
+ */
+using TruckFactory = std::function<std::shared_ptr<ITruck>(int)>;
 
 } // namespace Helium3
