@@ -55,7 +55,7 @@ public:
      * Returned as a const reference so external callers can read entries
      * without mutating the log’s contents or structure.
      */
-    virtual const Log& log() const = 0;
+    virtual const Log& log() const = 0; ///< Consider common log and logging the Events.
 };
 
 } // namespace Helium3

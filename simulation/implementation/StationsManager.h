@@ -13,9 +13,9 @@ public:
     virtual ~StationsManager() = default;
 
     // --- From IStation ---
-    void initialize(unsigned int stationCount) override = 0;   
-    std::vector<IStation*> stations() const override = 0;
-    IStation* getOptimalStation() const override = 0;
+    void initialize(unsigned int stationCount) override;   
+    std::vector<IStation*> stations() const override;
+    IStation* getOptimalStation() const override;
 
 private:
     std::vector<std::shared_ptr<IStation>> m_stations;

@@ -1,15 +1,15 @@
 #pragma once
 
+#include "common/Time.h"
 
 namespace Helium3 {
 
-class Time;
-
 class ISimulation {
+public:
+    virtual ~ISimulation() = default;
 
-    virtual void initalize(unsigned int trackCount, unsigned int stationCount) = 0;
-    virtual void run(const Time& simulatinLenght, const Time& timeStep) = 0;
-
+    virtual void initialize(unsigned int truckCount, unsigned int stationCount) = 0;
+    virtual void run(const Duration& simulationLength) = 0;
 };
 
-}
+} // namespace Helium3

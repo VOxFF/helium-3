@@ -31,10 +31,12 @@ struct Event {
     EventCallback onExpiration; ///< trigger when event is pulled out of queue (i.e. expired)
 
     /// Construct an event.
-    Event(Time start, Duration duration, /*ITruck& truck*/ EventCallback onExpiration = {})
-        : start(std::move(start)), duration(std::move(duration)), /*truck(truck)*/ onExpiration(onExpiration) {}
+    Event(Time start, Duration duration, EventCallback onExpiration = {})
+        : start(std::move(start)), duration(std::move(duration)), onExpiration(onExpiration) {}
 
     virtual ~Event() = default;
+
+    inline Time end() const { return start + duration; }
 
     /**
      * @brief Strict weak ordering for priority queues.
@@ -42,9 +44,7 @@ struct Event {
      * Earlier start wins; if starts are equal, shorter duration wins.
      */
     bool operator>(const Event& rhs) const {
-        return (start == rhs.start)
-                   ? duration > rhs.duration
-                   : start > rhs.start;
+        return end() > rhs.end();
     }
 };
 

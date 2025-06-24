@@ -8,7 +8,7 @@ namespace Helium3 {
 
 namespace {
 const std::string PREFIX("Station-");
-}
+} 
 
 void StationsManager::initialize(unsigned int stationCount)
 {
@@ -40,16 +40,16 @@ void StationsManager::initialize(unsigned int stationCount)
 
 std::vector<IStation*> StationsManager::stations() const 
 {
-    std::vector<IStation*> result;
-    result.reserve(m_stations.size());
-    std::transform( m_stations.begin(), m_stations.end(), std::back_inserter(result),
+    std::vector<IStation*> ptrs;
+    ptrs.reserve(m_stations.size());
+    std::transform( m_stations.begin(), m_stations.end(), std::back_inserter(ptrs),
         [](const std::shared_ptr<IStation>& ptr) { return ptr.get();});
 
-    return result;
+    return ptrs;
 }
 
-IStation* StationsManager::getOptimalStation() const {
-
+IStation* StationsManager::getOptimalStation() const 
+{
     assert(!m_queue.empty());
     return m_queue.top().first;
 }
