@@ -1,18 +1,16 @@
 #pragma once
 
 #include "interfaces/ISimulation.h"
+#include "interfaces/ITrucksManager.h"
+#include "interfaces/IStationsManager.h"
 #include "interfaces/ITruck.h"
 #include "common/Event.h"
-
 
 #include <vector>
 #include <memory>
 #include <queue>
 
 namespace Helium3 {
-
-class ITrucksManager;
-class IStationsManager;
 
 class Simulation : public ISimulation {
 public:
