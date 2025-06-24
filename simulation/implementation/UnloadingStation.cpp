@@ -15,23 +15,27 @@ const std::unordered_map<UnloadingStation::StateID, std::string> STATE_NAMES = {
 
 } // end of anonymous namespace
 
-
 Event UnloadingStation::enqueue(ITruck* truck) {
     assert(truck);
 
-    if (m_unloading == nullptr) 
-        return startUnloading(truck);
-    
+    if (m_unloading == nullptr) {
+        auto event = startUnloading(truck);
+        if (m_callback) 
+            m_callback();  // Notify manager
+        return event;
+    }
 
     // Truck needs to wait 
     auto unloadEvent = truck->startWaiting();
     unloadEvent.duration = WAIT_TIME * m_queue.size();
     m_queue.push(truck);
-    
+
+    if (m_callback) 
+        m_callback();  // Notify manager of queue size change
+
     auto truckCbk = unloadEvent.onExpiration;
     unloadEvent.onExpiration = [this, truckCbk]() -> Event {
-        if (truckCbk) 
-            truckCbk();
+        if (truckCbk) truckCbk();
         return this->dequeue();
     };
 
@@ -39,20 +43,27 @@ Event UnloadingStation::enqueue(ITruck* truck) {
 }
 
 Event UnloadingStation::dequeue() {
-    
     m_unloading = nullptr;
-    if(m_queue.empty()){
+
+    if (m_queue.empty()) {
         m_state = Waiting;
-        return Event{{}, {}, {}};
+        if (m_callback) 
+            m_callback();  // Notify manager: now idle
+        return Event{Time{}, Duration{}, nullptr};
     }
-        
+
     auto truck = m_queue.front();
     m_queue.pop();
 
-    return startUnloading(truck);
+    auto event = startUnloading(truck);
+    if (m_callback) 
+        m_callback();  // Notify manager: new truck started
+    return event;
 }
 
 Event UnloadingStation::startUnloading(ITruck* truck) {
+    assert(truck && "startUnloading called with nullptr truck");
+
     m_unloading = truck;
     m_state = Unloading;
 
@@ -60,8 +71,7 @@ Event UnloadingStation::startUnloading(ITruck* truck) {
     auto truckCbk = moveEvent.onExpiration;
 
     moveEvent.onExpiration = [this, truckCbk]() -> Event {
-        if (truckCbk) 
-            truckCbk();
+        if (truckCbk) truckCbk();
         return this->dequeue();
     };
 

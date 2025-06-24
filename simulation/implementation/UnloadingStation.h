@@ -5,6 +5,7 @@
 
 #include <string>
 #include <queue>
+#include <functional>
 
 namespace Helium3 {
 
@@ -15,8 +16,18 @@ namespace Helium3 {
  */
 class UnloadingStation : public IStation {
 public:
-    explicit UnloadingStation(const std::string& id)
-        : m_id(id), m_state(Idle), m_unloading(nullptr) {}
+    using Callback = std::function<void()>;
+
+    /**
+     * @brief Constructs an unloading station with a unique identifier.
+     * 
+     * @param id        Unique station identifier.
+     * @param callback  Optional callback invoked when the station's internal state 
+     *                  changes and priority ordering needs to be updated externally 
+     *                  (e.g., in a stations manager).
+     */
+    explicit UnloadingStation(const std::string& id, Callback callback = {})
+        : m_id(id), m_state(Idle), m_unloading(nullptr), m_callback(callback) {}
 
     ~UnloadingStation() override = default;
 
@@ -35,7 +46,8 @@ public:
     const Log& log() const override { return m_log; }
 
     // --- From IStation ---
-    size_t count() const override { return m_queue.size(); }
+    /// @brief Considers both enqueued trucks and the one currently being processed.
+    size_t count() const override { return m_queue.size() + (m_unloading ? 1 : 0); }
 
     /**
      * @brief  Accept a truck into the station’s processing queue.
@@ -64,6 +76,8 @@ private:
 
     std::queue<ITruck*> m_queue; ///< Queue of waiting trucks
     ITruck* m_unloading;         ///< Currently unloading truck, or nullptr
+
+    Callback m_callback;        ///< Callback to update ordering of station prirorities
 };
 
 } // namespace Helium3
