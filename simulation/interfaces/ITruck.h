@@ -59,12 +59,15 @@ public:
     // --- future truck-specific API will appear here ---
 };
 
+/// Requried by Truck to pick up the best Station
+class IStationManager;
+
 /**
  * @brief Factory function used to create custom truck instances.
  * 
  * Primarily useful in testing to override the default behavior of
  * `MiningTruck` by supplying custom truck implementations.
  */
-using TruckFactory = std::function<std::shared_ptr<ITruck>(int)>;
+using TruckFactory = std::function<std::shared_ptr<ITruck>(IStationManager&, int)>;
 
 } // namespace Helium3

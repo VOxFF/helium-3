@@ -6,12 +6,12 @@ namespace Helium3 {
 
 class MiningTruck : public ITruck {
 public:
-    explicit MiningTruck(const std::string& id) : m_id(id), m_state(Idle) {}
+    explicit MiningTruck(IStationManager& mgr, const std::string& id) : m_stationManager(mgr), m_id(id), m_state(Idle) {}
     ~MiningTruck() override = default;
 
     enum StateID {
         Idle = -1,              ///< Special state used for initialization
-        Mining = 100,
+        Mining,
         MovingToStation,
         ArrivedToStation,
         WaitingToUnload,
@@ -54,6 +54,8 @@ protected:
     Event makeEvent(Time start, Duration duration, EventCallback onExpirationCbk) const;
 
 private:
+    
+    IStationManager& m_stationManager; ///<Requried by Truck to pick up the best Station
     std::string m_id;
     State m_state;
 };

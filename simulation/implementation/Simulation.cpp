@@ -11,7 +11,7 @@ namespace Helium3 {
 
 Simulation::Simulation(const TruckFactory& factory) 
 : m_stationsManager(std::make_unique<StationManager>())
-, m_trucksManager(std::make_unique<TrucksManager>(factory))
+, m_trucksManager(std::make_unique<TrucksManager>(*m_stationsManager, factory))
 , m_log(std::make_unique<Log>()) {}
 
 void Simulation::initialize(unsigned int truckCount, unsigned int stationCount) 

@@ -18,7 +18,7 @@ public:
      *
      * @param factory Optional function that creates a truck for a given index.
      */
-    TrucksManager(const TruckFactory& factory = {}) : m_truckFactory(factory) {}
+    TrucksManager(IStationManager& mgr, TruckFactory factory = {}) : m_stationManager(mgr) ,m_truckFactory(factory) {}
     virtual ~TrucksManager() = default;
 
     // --- From ITrucksManager ---
@@ -28,6 +28,7 @@ public:
     // --- More truck-managing API will appear here ---
 
 private:
+    IStationManager& m_stationManager;
     TruckFactory m_truckFactory;
     std::vector<std::shared_ptr<ITruck>> m_trucks;
 };

@@ -77,7 +77,9 @@ Event UnloadingStation::startUnloading(ITruck* truck) {
     auto truckCbk = moveEvent.onExpiration;
 
     moveEvent.onExpiration = [this, truckCbk]() -> Event {
-        if (truckCbk) truckCbk();
+        if (truckCbk) 
+            return truckCbk().value();
+            
         return this->dequeue();
     };
 
