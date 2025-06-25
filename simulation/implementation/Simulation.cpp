@@ -26,10 +26,13 @@ void Simulation::run(const Duration& simulationLength)
     auto endTime = startTime + simulationLength;
     auto curTime = startTime;
 
-    for(auto track : m_trucksManager->trucks()){
-        auto event = track->startMining();
-        event.start = curTime; 
-        m_eventQueue.push(event);
+    for(auto track : m_trucksManager->trucks())
+    {
+        for(auto event : track->startMining()) 
+        {
+            event.start = curTime; 
+            m_eventQueue.push(event);
+        }
     }
     while(!m_eventQueue.empty() && m_eventQueue.top().end() < endTime)
     {
@@ -42,9 +45,8 @@ void Simulation::run(const Duration& simulationLength)
         if(!event.onExpiration)
             continue; // no action to perform
 
-        if (auto nextOpt = event.onExpiration(); nextOpt.has_value()) 
+        for (auto next : event.onExpiration()) 
         {
-            auto next = nextOpt.value();
             next.start = curTime;
             m_eventQueue.push(next);
         }

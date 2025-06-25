@@ -29,12 +29,12 @@ public:
     
 
     // --- From ITruck ---
-    Event startMining() override;
-    Event driveToStation() override;
-    Event checkinAtStation() override;
-    Event startWaiting() override;
-    Event unload() override;
-    Event driveToMining() override;
+    Events startMining() override;
+    Events driveToStation() override;
+    Events checkinAtStation() override;
+    Events startWaiting() override;
+    Events unload() override;
+    Events driveToMining() override;
 
     // --- Future truck-specific API will appear here ---
 

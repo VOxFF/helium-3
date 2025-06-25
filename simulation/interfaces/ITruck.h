@@ -39,22 +39,22 @@ public:
     virtual ~ITruck() = default;
 
     /// Begin mining at a site.
-    virtual Event startMining() = 0;
+    virtual Events startMining() = 0;
 
     /// Begin travel from site to station.
-    virtual Event driveToStation() = 0;
+    virtual Events driveToStation() = 0;
 
     /// Arrive at the station.
-    virtual Event checkinAtStation() = 0;
+    virtual Events checkinAtStation() = 0;
 
     /// Wait in queue to unload.
-    virtual Event startWaiting() = 0;
+    virtual Events startWaiting() = 0;
 
     /// Unload Helium-3 at station.
-    virtual Event unload() = 0;
+    virtual Events unload() = 0;
 
     /// Return to the mining site.
-    virtual Event driveToMining() = 0;
+    virtual Events driveToMining() = 0;
 
     // --- future truck-specific API will appear here ---
 };

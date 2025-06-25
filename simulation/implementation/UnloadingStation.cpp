@@ -21,18 +21,20 @@ const std::string& UnloadingStation::stateName(UnloadingStation::StateID id) {
     return (it != STATE_NAMES.end()) ? it->second : idle;
 }
 
-Event UnloadingStation::enqueue(ITruck* truck) {
+Events UnloadingStation::enqueue(ITruck* truck) {
     assert(truck);
 
     if (m_unloading == nullptr) {
-        auto event = startUnloading(truck);
+        auto events = startUnloading(truck);
         if (m_callback) 
             m_callback();  // Notify manager
-        return event;
+
+        return events;
     }
 
     // Truck needs to wait 
-    auto unloadEvent = truck->startWaiting();
+    auto events = truck->startWaiting();
+    auto& unloadEvent = events.front();
     unloadEvent.duration = WAIT_TIME * m_queue.size();
     m_queue.push(truck);
 
@@ -40,50 +42,52 @@ Event UnloadingStation::enqueue(ITruck* truck) {
         m_callback();  // Notify manager of queue size change
 
     auto truckCbk = unloadEvent.onExpiration;
-    unloadEvent.onExpiration = [this, truckCbk]() -> Event {
-        if (truckCbk) truckCbk();
-        return this->dequeue();
+    // Need to chain these events
+    unloadEvent.onExpiration = [this, truckCbk]() -> Events {
+        Events events = truckCbk ? truckCbk() : Events{};     
+        events += dequeue();
+        return events;
     };
 
-    return unloadEvent;
+    return events;
 }
 
-Event UnloadingStation::dequeue() {
+Events UnloadingStation::dequeue() {
     m_unloading = nullptr;
 
     if (m_queue.empty()) {
         m_state = Waiting;
         if (m_callback) 
             m_callback();  // Notify manager: now idle
-        return {};
+        return {};         // We do not know wait duration
     }
 
     auto truck = m_queue.front();
     m_queue.pop();
 
-    auto event = startUnloading(truck);
+    auto events = startUnloading(truck);
     if (m_callback) 
         m_callback();  // Notify manager: new truck started
-    return event;
+    return events;
 }
 
-Event UnloadingStation::startUnloading(ITruck* truck) {
+Events UnloadingStation::startUnloading(ITruck* truck) {
     assert(truck && "startUnloading called with nullptr truck");
 
     m_unloading = truck;
     m_state = Unloading;
 
-    auto moveEvent = truck->unload();
+    auto events = truck->unload();
+    auto& moveEvent = events.front();
     auto truckCbk = moveEvent.onExpiration;
-
-    moveEvent.onExpiration = [this, truckCbk]() -> Event {
-        if (truckCbk) 
-            return truckCbk().value();
-            
-        return this->dequeue();
+    //need to chain these events
+    moveEvent.onExpiration = [this, truckCbk]() -> Events {
+        Events events = truckCbk ? truckCbk() : Events{};     
+        events += dequeue();
+        return events;
     };
 
-    return moveEvent;
+    return events;
 }
 
 } // namespace Helium3

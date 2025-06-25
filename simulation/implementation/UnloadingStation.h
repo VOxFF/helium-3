@@ -55,17 +55,17 @@ public:
      *               lifetime.
      * @return An Event if processing starts immediately, or an empty Event if queued.
      */
-    Event enqueue(ITruck* truck) override;
+    Events enqueue(ITruck* truck) override;
 
     /**
      * @brief  Advance to the next truck in the queue.
      *
      * @return An Event to resume the next truck, or empty if queue is empty.
      */
-    Event dequeue() override;
+    Events dequeue() override;
 
 protected: 
-    Event startUnloading(ITruck* truck);
+    Events startUnloading(ITruck* truck);
 
 private:
     std::string m_id;

@@ -8,13 +8,13 @@
 #include "common/Time.h"
 
 #include <functional>
+#include <vector>
 #include <optional>
 
 namespace Helium3 {
 
-struct Event;
-
-using EventCallback = std::function<std::optional<Event>(void)>; 
+/// Callback that returns one or more follow-up events.
+using EventCallback = std::function<std::vector<struct Event>(void)>;
 
 /**
  * @struct Event
@@ -51,6 +51,37 @@ struct Event {
         return end() > rhs.end();
     }
 };
+
+using Events = std::vector<Event>;
+
+
+// -- Utility -- 
+/**
+ * @brief Appends elements from b to a.
+ * @tparam T Element type.
+ * @param a Destination vector.
+ * @param b Source vector.
+ * @return Modified a.
+ */
+template<typename T>
+std::vector<T>& operator+=(std::vector<T>& a, const std::vector<T>& b) {
+    a.insert(a.end(), b.begin(), b.end());
+    return a;
+}
+
+/**
+ * @brief Appends an element to the vector.
+ * @tparam T Element type.
+ * @param a Destination vector.
+ * @param item Element to append.
+ * @return Modified a.
+ */
+template<typename T>
+std::vector<T>& operator+=(std::vector<T>& a, const T& item) {
+    a.push_back(item);
+    return a;
+}
+
 
 } // namespace Helium3
 

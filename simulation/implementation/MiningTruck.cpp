@@ -46,71 +46,71 @@ Event MiningTruck::makeEvent(Time start, Duration duration, EventCallback onExpi
     return Event(id(), state(), start, duration, onExpirationCbk);
 }
 
-Event MiningTruck::startMining() {
+Events MiningTruck::startMining() {
     assert(m_state == Idle || m_state == MovingToMining);
     m_state = Mining;
 
-    return makeEvent(
+    return {makeEvent(
         Time{}, // time to be set externally
         miningTime(), 
         [this]() { return driveToStation(); }
-    );
+    )};
 }
 
-Event MiningTruck::driveToStation() {
+Events MiningTruck::driveToStation() {
     assert(m_state == Mining);
     m_state = MovingToStation;
 
-    return makeEvent(
+    return { makeEvent(
         Time{}, 
         DRIVE_TIME, 
         [this]() { return checkinAtStation(); }
-    );
+    )};
 }
 
-Event MiningTruck::checkinAtStation() {
+Events MiningTruck::checkinAtStation() {
     assert(m_state == MovingToStation);
     m_state = ArrivedToStation;
 
     auto station = m_stationManager.getOptimalStation();
-    return makeEvent(
+    return { makeEvent(
         Time{}, 
         Duration{}, // zero-duration event
          [this, station]() { return station->enqueue(this); }
-    );
+    )};
 }
 
-Event MiningTruck::startWaiting() {
+Events MiningTruck::startWaiting() {
     assert(m_state == ArrivedToStation);
     m_state = WaitingToUnload;
 
-    return makeEvent(
+    return { makeEvent(
         Time{}, 
         Duration{}, // Station will define duration
         [this]() { return unload(); } // can be wrapped/overridden by Station
-    );
+    )};
 }
 
-Event MiningTruck::unload() {
+Events MiningTruck::unload() {
     assert(m_state == ArrivedToStation || m_state == WaitingToUnload);
     m_state = Unloading;
 
-    return makeEvent(
+    return { makeEvent(
         Time{}, 
         UNLOAD_TIME, 
         [this]() { return driveToMining(); }
-    );
+    )};
 }
 
-Event MiningTruck::driveToMining() {
+Events MiningTruck::driveToMining() {
     assert(m_state == Unloading);
     m_state = MovingToMining;
 
-    return makeEvent(
+    return { makeEvent(
         Time{}, 
         DRIVE_TIME, 
         [this]() { return startMining(); }
-    );
+    )};
 }
 
 } // namespace Helium3

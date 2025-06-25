@@ -37,8 +37,8 @@ public:
      *               transferred; the simulation still manages the truck’s
      *               lifetime.
      */
-    virtual Event enqueue(ITruck* truck) = 0;
-    virtual Event dequeue() = 0;
+    virtual Events enqueue(ITruck* truck) = 0;
+    virtual Events dequeue() = 0;
 };
 
 } // namespace Helium3
