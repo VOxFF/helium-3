@@ -1,23 +1,37 @@
 
 #include "common/State.h"
 #include "testing/SimulationTest.h"
+#include "testing/TestTrucks.h"
 
 #include <iostream>
 
 using namespace Helium3;
 using namespace Helium3::Testing;
 
+auto oneHourTruckFactory =
+  [](IStationManager& mgr, int idx) -> std::shared_ptr<ITruck> {
+    return std::make_shared<FixedTimeTruck>(
+      mgr,
+      FixedTimeTruck::namePrefix() + std::to_string(idx),       
+      std::chrono::hours(1)
+    );
+};
+
 
 INSTANTIATE_TEST_SUITE_P(
-    SimpleScenarios,        // Test suite group (prefix for test names)
-    SimulationTest,         // Test class
-    ::testing::Values(      // Test parameters
-        SimulationTestParams{1, 1, std::chrono::hours(10), {}}
-        //,SimulationTestParams{5, 2, std::chrono::hours(12), {}}
+    PredictedScenarios,         // Test suite group (prefix for test names)
+    PredictedTest,              // Test class
+    ::testing::Values(          // Test parameters
+        PredictedParams{{1, 1, std::chrono::hours(10), oneHourTruckFactory}, {}}, //1 truck, 1 station
+        PredictedParams{{2, 2, std::chrono::hours(10), oneHourTruckFactory}, {}}  //1 trucks, 1 stations
     )
 );
 
-TEST_P(SimulationTest, BasicSimulationRuns) {
+/*
+1 - one hour truck, 1 station, total time 10 hrs, anticipated
+5 ming -> unloading cycles, simulation finishes when truck travesl back to Mining Site
+*/
+TEST_P(PredictedTest, BasicSimulationRuns) {
     ASSERT_NO_THROW(run());
 }
 

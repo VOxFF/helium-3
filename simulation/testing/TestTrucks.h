@@ -4,7 +4,7 @@ namespace Helium3::Testing {
 
 class FixedTimeTruck : public MiningTruck {
 public:
-    FixedTimeTruck(const std::string id, Duration t) : MiningTruck(id), m_miningTime(t) {}
+    FixedTimeTruck(IStationManager& mgr, const std::string id, Duration t) : MiningTruck(mgr, id), m_miningTime(t) {}
 
 protected:
     // --- From MiningTruck ---

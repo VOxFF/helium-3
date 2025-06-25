@@ -22,6 +22,7 @@ public:
     };
 
     static const std::string& stateName(StateID id);
+    static const std::string& namePrefix();
 
     // --- From IMachine ---
     const std::string& id() const override { return m_id; }

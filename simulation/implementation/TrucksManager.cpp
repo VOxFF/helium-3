@@ -7,14 +7,14 @@
 namespace Helium3 {
 
 namespace {
-const std::string PREFIX("Truck_");
+
 } 
 
 void TrucksManager::initialize(unsigned int truckCount) 
 {
     assert(m_trucks.empty());
     for(auto i = 0; i < truckCount; i++)
-        m_trucks.emplace_back(m_truckFactory ? m_truckFactory(m_stationManager, i) : std::make_shared<MiningTruck>(m_stationManager, PREFIX + std::to_string(i)));
+        m_trucks.emplace_back(m_truckFactory ? m_truckFactory(m_stationManager, i) : std::make_shared<MiningTruck>(m_stationManager, MiningTruck::namePrefix() + std::to_string(i)));
 }
 
 std::vector<ITruck*> TrucksManager::trucks() const 

@@ -24,12 +24,18 @@ const std::unordered_map<MiningTruck::StateID, std::string> STATE_NAMES = {
     {MiningTruck::MovingToMining,   "Returning to Mining Site"}
 };
 
+const std::string PREFIX("Truck_");
+
 } // end of anonymous namespace
 
 const std::string& MiningTruck::stateName(MiningTruck::StateID id) {
     auto it = STATE_NAMES.find(id);
     static const std::string idle = "Idle";
     return (it != STATE_NAMES.end()) ? it->second : idle;
+}
+
+const std::string& MiningTruck::namePrefix() {
+    return PREFIX;
 }
 
 Duration MiningTruck::miningTime() const 
