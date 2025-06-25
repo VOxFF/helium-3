@@ -1,4 +1,4 @@
-#include "StationsManager.h"
+#include "StationManager.h"
 #include "UnloadingStation.h"
 
 #include <string>
@@ -10,7 +10,7 @@ namespace {
 const std::string PREFIX("Station-");
 } 
 
-void StationsManager::initialize(unsigned int stationCount)
+void StationManager::initialize(unsigned int stationCount)
 {
     assert(m_queue.empty() && m_stations.empty());
 
@@ -18,7 +18,7 @@ void StationsManager::initialize(unsigned int stationCount)
     {   
         // Not quite optimal, consider other structure than priority_queue
         auto callback = [this, i]() {
-            std::vector<StationsManager::RankedStation> temp;
+            std::vector<StationManager::RankedStation> temp;
             auto target = m_stations[i].get();
             auto targetFound = false;
 
@@ -38,7 +38,7 @@ void StationsManager::initialize(unsigned int stationCount)
     }
 }
 
-std::vector<IStation*> StationsManager::stations() const 
+std::vector<IStation*> StationManager::stations() const 
 {
     std::vector<IStation*> ptrs;
     ptrs.reserve(m_stations.size());
@@ -48,7 +48,7 @@ std::vector<IStation*> StationsManager::stations() const
     return ptrs;
 }
 
-IStation* StationsManager::getOptimalStation() const 
+IStation* StationManager::getOptimalStation() const 
 {
     assert(!m_queue.empty());
     return m_queue.top().first;

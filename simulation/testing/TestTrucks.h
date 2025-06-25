@@ -7,7 +7,7 @@ public:
     FixedTimeTruck(const std::string id, Duration t) : MiningTruck(id), m_miningTime(t) {}
 
 protected:
-    // --- From ITruck ---
+    // --- From MiningTruck ---
     Duration miningTime() const override { return m_miningTime; }
 
 private:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "interfaces/IStationsManager.h"
+#include "interfaces/IStationManager.h"
 #include "interfaces/IStation.h"
 #include <queue>
 #include <utility>
@@ -8,9 +8,9 @@
 
 namespace Helium3 {
 
-class StationsManager : public IStationsManager {
+class StationManager : public IStationManager {
 public:
-    virtual ~StationsManager() = default;
+    virtual ~StationManager() = default;
 
     // --- From IStation ---
     void initialize(unsigned int stationCount) override;   

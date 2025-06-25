@@ -15,6 +15,12 @@ const std::unordered_map<UnloadingStation::StateID, std::string> STATE_NAMES = {
 
 } // end of anonymous namespace
 
+const std::string& UnloadingStation::stateName(UnloadingStation::StateID id) {
+    auto it = STATE_NAMES.find(id);
+    static const std::string idle = "Idle";
+    return (it != STATE_NAMES.end()) ? it->second : idle;
+}
+
 Event UnloadingStation::enqueue(ITruck* truck) {
     assert(truck);
 
@@ -49,7 +55,7 @@ Event UnloadingStation::dequeue() {
         m_state = Waiting;
         if (m_callback) 
             m_callback();  // Notify manager: now idle
-        return Event{Time{}, Duration{}, nullptr};
+        return {};
     }
 
     auto truck = m_queue.front();

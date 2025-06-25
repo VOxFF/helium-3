@@ -1,15 +1,18 @@
 #include "Simulation.h"
 #include "TrucksManager.h"
-#include "StationsManager.h"
-#include "MiningTruck.h"
+#include "StationManager.h"
+#include "Log.h"
 
 #include "common/Time.h"
+
+#include <iostream> //temp
 
 namespace Helium3 {
 
 Simulation::Simulation(const TruckFactory& factory) 
-: m_trucksManager(std::make_unique<TrucksManager>(factory))
-, m_stationsManager(std::make_unique<StationsManager>()) {}
+: m_stationsManager(std::make_unique<StationManager>())
+, m_trucksManager(std::make_unique<TrucksManager>(factory))
+, m_log(std::make_unique<Log>()) {}
 
 void Simulation::initialize(unsigned int truckCount, unsigned int stationCount) 
 {
@@ -33,8 +36,9 @@ void Simulation::run(const Duration& simulationLength)
         auto event = m_eventQueue.top();
         m_eventQueue.pop();
 
-        curTime = event.end();
+        m_log->add(event);
 
+        curTime = event.end();
         if(!event.onExpiration)
             continue; // no action to perform
 
@@ -44,8 +48,13 @@ void Simulation::run(const Duration& simulationLength)
             next.start = curTime;
             m_eventQueue.push(next);
         }
-    
     }
+    std::cout << "queue size: " << m_eventQueue.size() << std::endl; //some items can still remain in queue after expiraton, uncomplette tasks
+}
+
+ILog& Simulation::log() const 
+{
+    return *m_log;
 }
 
 } // namespace Helium3

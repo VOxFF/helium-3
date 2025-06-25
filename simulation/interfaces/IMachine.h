@@ -19,8 +19,6 @@
 
 namespace Helium3 {
  
-class Log;     
-
 /**
  * @class IMachine
  * @brief Abstract base class for all mechanical units in the Helium-3
@@ -47,15 +45,7 @@ public:
      * @brief Query the current finite state.
      * @return A constant reference to the machine’s @c State object.
      */
-    virtual const State& getState() const = 0;
-   
-    /**
-     * @brief Access the machine-local log for telemetry or debugging output.
-     *
-     * Returned as a const reference so external callers can read entries
-     * without mutating the log’s contents or structure.
-     */
-    virtual const Log& log() const = 0; ///< Consider common log and logging the Events.
+    virtual const State& state() const = 0;
 };
 
 } // namespace Helium3

@@ -8,8 +8,8 @@ namespace Helium3 {
 
 namespace {
 
-constexpr Duration MINING_TIME_MIN = std::chrono::hours(1);
-constexpr Duration MINING_TIME_MAX = std::chrono::hours(5);
+constexpr double MINING_TIME_MIN = 1.0;
+constexpr double MINING_TIME_MAX = 5.0;
 constexpr Duration DRIVE_TIME = std::chrono::minutes(30);
 constexpr Duration UNLOAD_TIME = std::chrono::minutes(5);
 
@@ -33,15 +33,22 @@ const std::string& MiningTruck::stateName(MiningTruck::StateID id) {
 Duration MiningTruck::miningTime() const 
 {
     static std::mt19937 rng(std::random_device{}());
-    static std::uniform_real_distribution<double> dist(MINING_TIME_MIN.count(), MINING_TIME_MAX.count());
-    return std::chrono::duration_cast<Duration>(std::chrono::duration<double>(dist(rng)));
+    static std::uniform_real_distribution<double> dist(MINING_TIME_MIN, MINING_TIME_MAX); // in hours
+    double hours = dist(rng);
+
+    return std::chrono::duration_cast<Duration>(std::chrono::duration<double, std::ratio<3600>>(hours)); //to duration
+}
+
+Event MiningTruck::makeEvent(Time start, Duration duration, EventCallback onExpirationCbk) const 
+{
+    return Event(id(), state(), start, duration, onExpirationCbk);
 }
 
 Event MiningTruck::startMining() {
     assert(m_state == Idle || m_state == MovingToMining);
     m_state = Mining;
 
-    return Event(
+    return makeEvent(
         Time{}, // time to be set externally
         miningTime(), 
         [this]() { return driveToStation(); }
@@ -52,7 +59,7 @@ Event MiningTruck::driveToStation() {
     assert(m_state == Mining);
     m_state = MovingToStation;
 
-    return Event(
+    return makeEvent(
         Time{}, 
         DRIVE_TIME, 
         [this]() { return checkinAtStation(); }
@@ -63,7 +70,7 @@ Event MiningTruck::checkinAtStation() {
     assert(m_state == MovingToStation);
     m_state = ArrivedToStation;
 
-    return Event(
+    return makeEvent(
         Time{}, 
         Duration{}, // zero-duration event
         {}          // callback to be overridden by Station
@@ -74,7 +81,7 @@ Event MiningTruck::startWaiting() {
     assert(m_state == ArrivedToStation);
     m_state = WaitingToUnload;
 
-    return Event(
+    return makeEvent(
         Time{}, 
         Duration{}, // Station will define duration
         [this]() { return unload(); } // can be wrapped/overridden by Station
@@ -85,7 +92,7 @@ Event MiningTruck::unload() {
     assert(m_state == ArrivedToStation || m_state == WaitingToUnload);
     m_state = Unloading;
 
-    return Event(
+    return makeEvent(
         Time{}, 
         UNLOAD_TIME, 
         [this]() { return driveToMining(); }
@@ -96,7 +103,7 @@ Event MiningTruck::driveToMining() {
     assert(m_state == Unloading);
     m_state = MovingToMining;
 
-    return Event(
+    return makeEvent(
         Time{}, 
         DRIVE_TIME, 
         [this]() { return startMining(); }

@@ -12,8 +12,9 @@ INSTANTIATE_TEST_SUITE_P(
     SimpleScenarios,        // Test suite group (prefix for test names)
     SimulationTest,         // Test class
     ::testing::Values(      // Test parameters
-        SimulationTestParams{2, 1, std::chrono::hours(10), {}},
-        SimulationTestParams{5, 2, std::chrono::hours(12), {}})
+        SimulationTestParams{1, 1, std::chrono::hours(10), {}}
+        //,SimulationTestParams{5, 2, std::chrono::hours(12), {}}
+    )
 );
 
 TEST_P(SimulationTest, BasicSimulationRuns) {

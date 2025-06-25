@@ -1,7 +1,6 @@
 #pragma once
 
 #include "interfaces/ITruck.h"
-#include "common/Log.h"
 
 namespace Helium3 {
 
@@ -12,7 +11,7 @@ public:
 
     enum StateID {
         Idle = -1,              ///< Special state used for initialization
-        Mining,
+        Mining = 100,
         MovingToStation,
         ArrivedToStation,
         WaitingToUnload,
@@ -26,8 +25,8 @@ public:
 
     // --- From IMachine ---
     const std::string& id() const override { return m_id; }
-    const State& getState() const override { return m_state; }
-    const Log& log() const override { return m_log; }
+    const State& state() const override { return m_state; }
+    
 
     // --- From ITruck ---
     Event startMining() override;
@@ -52,11 +51,11 @@ protected:
      */
     virtual Duration miningTime() const;
 
+    Event makeEvent(Time start, Duration duration, EventCallback onExpirationCbk) const;
 
 private:
     std::string m_id;
     State m_state;
-    Log m_log;
 };
 
 } // namespace Helium3

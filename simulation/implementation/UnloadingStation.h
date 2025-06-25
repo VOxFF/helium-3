@@ -1,7 +1,6 @@
 #pragma once
 
 #include "interfaces/IStation.h"
-#include "common/Log.h"
 
 #include <string>
 #include <queue>
@@ -34,7 +33,7 @@ public:
     enum StateID {
         Idle = -1,     ///< Initial or reset state
         Unloading,     ///< Actively unloading a truck
-        Waiting,       ///< Has a queue but not currently unloading
+        Waiting,       ///< Not uloading and no trucks in queue, waiting for Truck arrival
         StatesCount    ///< Number of defined states (excluding Idle)
     };
 
@@ -42,8 +41,7 @@ public:
 
     // --- From IMachine ---
     const std::string& id() const override { return m_id; }
-    const State& getState() const override { return m_state; }
-    const Log& log() const override { return m_log; }
+    const State& state() const override { return m_state; }
 
     // --- From IStation ---
     /// @brief Considers both enqueued trucks and the one currently being processed.
@@ -72,7 +70,6 @@ protected:
 private:
     std::string m_id;
     State m_state;
-    Log m_log;
 
     std::queue<ITruck*> m_queue; ///< Queue of waiting trucks
     ITruck* m_unloading;         ///< Currently unloading truck, or nullptr

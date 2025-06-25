@@ -2,8 +2,10 @@
 
 #include "interfaces/ISimulation.h"
 #include "interfaces/ITrucksManager.h"
-#include "interfaces/IStationsManager.h"
+#include "interfaces/IStationManager.h"
 #include "interfaces/ITruck.h"
+#include "interfaces/ILog.h"
+
 #include "common/Event.h"
 
 #include <vector>
@@ -29,10 +31,12 @@ public:
     // --- From ISimulation ---
     void initialize(unsigned int truckCount, unsigned int stationCount) override;
     void run(const Duration& simulationLength) override;
+    ILog& log() const override;
 
 private:
+    std::unique_ptr<IStationManager> m_stationsManager;
     std::unique_ptr<ITrucksManager> m_trucksManager;
-    std::unique_ptr<IStationsManager> m_stationsManager;
+    std::unique_ptr<ILog> m_log;
 
     std::priority_queue<Event, std::vector<Event>, std::greater<Event>> m_eventQueue;
 };

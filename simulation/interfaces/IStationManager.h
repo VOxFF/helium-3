@@ -15,9 +15,9 @@ class IStation;
  * for extension — future implementations may incorporate distance,
  * load balancing, or historical metrics.
  */
-class IStationsManager {
+class IStationManager {
 public:
-    virtual ~IStationsManager() = default;
+    virtual ~IStationManager() = default;
 
     /// Initialize the manager with the given number of unloading stations.
     virtual void initialize(unsigned int stationCount) = 0;

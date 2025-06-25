@@ -26,14 +26,18 @@ using EventCallback = std::function<std::optional<Event>(void)>;
  * durations—bubble to the top.
  */
 struct Event {
-    Time        start;          ///< absolute simulation time the event begins
-    Duration    duration;       ///< how long the event lasts
-    EventCallback onExpiration; ///< trigger when event is pulled out of queue (i.e. expired)
+    std::string machineId;      ///< ID of the machine that triggered the event
+    State       state = -1;     ///< State the machine transitioned into
+    Time        start = {};     ///< Absolute simulation time when the event begins
+    Duration    duration = {};  ///< Duration of the event
+    EventCallback onExpiration; ///< Triggered when the event is pulled from the queue (i.e., expires)
+
 
     /// Construct an event.
-    Event(Time start, Duration duration, EventCallback onExpiration = {})
-        : start(std::move(start)), duration(std::move(duration)), onExpiration(onExpiration) {}
-
+    Event() = default;
+    Event(const std::string& machineId, State state,  Time start, Duration duration, EventCallback onExpiration = {})
+        : machineId(machineId), state(std::move(state)), start(std::move(start)), duration(std::move(duration)), onExpiration(onExpiration) {}
+    
     virtual ~Event() = default;
 
     inline Time end() const { return start + duration; }
