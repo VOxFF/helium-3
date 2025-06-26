@@ -6,7 +6,7 @@ namespace Helium3 {
 
 namespace {
 
-constexpr Duration WAIT_TIME = std::chrono::minutes(5);
+constexpr Duration UNLOAD_TIME = std::chrono::minutes(5);
 
 const std::unordered_map<UnloadingStation::StateID, std::string> STATE_NAMES = {
     {UnloadingStation::Unloading,   "Unloading"},
@@ -34,21 +34,20 @@ Events UnloadingStation::enqueue(ITruck* truck) {
 
     // Truck needs to wait 
     auto events = truck->startWaiting();
-    auto& unloadEvent = events.front();
-    // Account for the truck currently unloading by adding 1
-    // to the number of vehicles already waiting in the queue.
-    unloadEvent.duration = WAIT_TIME * (m_queue.size() + 1);
+    auto& waitEvent = events.front();
+    
+    // *** FIX: Calculate actual wait time based on current unloading and queue ***
+    Time currentTime = waitEvent.start;  // This will be set by simulation
+    waitEvent.duration = getWaitTime(currentTime);
+    
     m_queue.push(truck);
 
     if (m_callback) 
         m_callback();  // Notify manager of queue size change
 
-    auto truckCbk = unloadEvent.onExpiration;
-    // Need to chain these events
-    unloadEvent.onExpiration = [this, truckCbk]() -> Events {
-        Events events = truckCbk ? truckCbk() : Events{};     
-        events += dequeue();
-        return events;
+    // *** FIX: Don't call truck's unload() directly, just trigger dequeue ***
+    waitEvent.onExpiration = [this]() -> Events {
+        return dequeue();
     };
 
     return events;
@@ -81,6 +80,10 @@ Events UnloadingStation::startUnloading(ITruck* truck) {
 
     auto events = truck->unload();
     auto& moveEvent = events.front();
+    
+
+    m_currentUnloadingEnd = moveEvent.start + UNLOAD_TIME;
+    
     auto truckCbk = moveEvent.onExpiration;
     //need to chain these events
     moveEvent.onExpiration = [this, truckCbk]() -> Events {
@@ -90,6 +93,21 @@ Events UnloadingStation::startUnloading(ITruck* truck) {
     };
 
     return events;
+}
+
+
+Duration UnloadingStation::getWaitTime(Time currentTime) const {
+    Duration waitTime = Duration::zero();
+    
+    // If there's a truck currently unloading, add remaining time
+    if (m_unloading != nullptr && m_currentUnloadingEnd > currentTime) {
+        waitTime += m_currentUnloadingEnd - currentTime;
+    }
+    
+    // Add time for all trucks in queue (5 minutes each)
+    waitTime += UNLOAD_TIME * m_queue.size();
+    
+    return waitTime;
 }
 
 } // namespace Helium3

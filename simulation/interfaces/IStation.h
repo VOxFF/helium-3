@@ -12,6 +12,7 @@
 #pragma once
 #include "interfaces/IMachine.h"
 #include "common/Event.h"
+#include "common/Time.h"  
 
 namespace Helium3 {
 
@@ -31,14 +32,16 @@ public:
     virtual size_t count() const = 0;
 
     /**
-     * @brief  Accept a truck into the station’s processing queue.
+     * @brief  Accept a truck into the station's processing queue.
      *
      * @param truck  Reference to the arriving vehicle.  Ownership is *not*
-     *               transferred; the simulation still manages the truck’s
+     *               transferred; the simulation still manages the truck's
      *               lifetime.
      */
     virtual Events enqueue(ITruck* truck) = 0;
     virtual Events dequeue() = 0;
+    
+    virtual Duration getWaitTime(Time currentTime) const = 0;
 };
 
 } // namespace Helium3

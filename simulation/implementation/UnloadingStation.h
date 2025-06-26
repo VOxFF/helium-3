@@ -26,7 +26,7 @@ public:
      *                  (e.g., in a stations manager).
      */
     explicit UnloadingStation(const std::string& id, Callback callback = {})
-        : m_id(id), m_state(Idle), m_unloading(nullptr), m_callback(callback) {}
+        : m_id(id), m_state(Idle), m_unloading(nullptr), m_currentUnloadingEnd(Time{}), m_callback(callback) {}
 
     ~UnloadingStation() override = default;
 
@@ -48,10 +48,10 @@ public:
     size_t count() const override { return m_queue.size() + (m_unloading ? 1 : 0); }
 
     /**
-     * @brief  Accept a truck into the station’s processing queue.
+     * @brief  Accept a truck into the station's processing queue.
      *
      * @param truck  Reference to the arriving vehicle.  Ownership is *not*
-     *               transferred; the simulation still manages the truck’s
+     *               transferred; the simulation still manages the truck's
      *               lifetime.
      * @return An Event if processing starts immediately, or an empty Event if queued.
      */
@@ -63,6 +63,9 @@ public:
      * @return An Event to resume the next truck, or empty if queue is empty.
      */
     Events dequeue() override;
+    
+
+    Duration getWaitTime(Time currentTime) const override;
 
 protected: 
     Events startUnloading(ITruck* truck);
@@ -73,6 +76,9 @@ private:
 
     std::queue<ITruck*> m_queue; ///< Queue of waiting trucks
     ITruck* m_unloading;         ///< Currently unloading truck, or nullptr
+    
+  
+    Time m_currentUnloadingEnd;  ///< When current truck will finish unloading
 
     Callback m_callback;        ///< Callback to update ordering of station prirorities
 };

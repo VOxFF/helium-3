@@ -11,14 +11,12 @@ public:
 
     enum StateID {
         Idle = -1,              ///< Special state used for initialization
-        Mining,
+        Mining = 10,
         MovingToStation,
         ArrivedToStation,
         WaitingToUnload,
         Unloading,
         MovingToMining,
-
-        StatesCount             ///< Total number of states (excluding Idle)
     };
 
     static const std::string& stateName(StateID id);

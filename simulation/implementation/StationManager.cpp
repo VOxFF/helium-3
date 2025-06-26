@@ -3,6 +3,7 @@
 
 #include <string>
 #include <cassert>
+#include <limits>
 
 namespace Helium3 {
 
@@ -12,28 +13,11 @@ const std::string PREFIX("Station-");
 
 void StationManager::initialize(unsigned int stationCount)
 {
-    assert(m_queue.empty() && m_stations.empty());
+    assert(m_stations.empty());
 
     for (auto i = 0; i < stationCount; i++) 
     {   
-        // Not quite optimal, consider other structure than priority_queue
-        auto callback = [this, i]() {
-            std::vector<StationManager::RankedStation> temp;
-            auto target = m_stations[i].get();
-            auto targetFound = false;
-
-            while (!m_queue.empty() && !targetFound) {
-                auto [station, op_count] = m_queue.top(); m_queue.pop();
-                targetFound = station == target; 
-                temp.push_back({station, targetFound ? op_count+1 : op_count});
-                
-            }
-            for (const auto& entry : temp) 
-                m_queue.push(entry);
-        };
- 
-        auto station = std::make_shared<UnloadingStation>(PREFIX + std::to_string(i), callback);
-        m_queue.emplace(station.get(), 0);     // initially zero operations
+        auto station = std::make_shared<UnloadingStation>(PREFIX + std::to_string(i));
         m_stations.push_back(std::move(station));
     }
 }
@@ -48,12 +32,32 @@ std::vector<IStation*> StationManager::stations() const
     return ptrs;
 }
 
+
 IStation* StationManager::getOptimalStation() const 
 {
-    assert(!m_queue.empty());
-    return m_queue.top().first;
+    assert(!m_stations.empty());
+    
+    // First, check if any station is free (not currently unloading)
+    for (const auto& station : m_stations) {
+        if (station->count() == 0) {
+            return station.get();  // Return first available station
+        }
+    }
+    
+    // All stations are occupied, find the one with shortest wait time
+    IStation* bestStation = nullptr;
+    Duration minWaitTime = Duration::max();
+    Time currentTime = Time{}; // This is a simplification - ideally should pass current simulation time
+    
+    for (const auto& station : m_stations) {
+        Duration waitTime = station->getWaitTime(currentTime);
+        if (waitTime < minWaitTime) {
+            minWaitTime = waitTime;
+            bestStation = station.get();
+        }
+    }
+    
+    return bestStation;
 }
-
-
 
 } // namespace Helium3
