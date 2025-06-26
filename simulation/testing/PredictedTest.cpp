@@ -21,42 +21,60 @@ INSTANTIATE_TEST_SUITE_P(
     PredictedScenarios,
     PredictedTest,
     ::testing::Values(
-        PredictedParams{
+        PredictedParams{  //test case 1
             {1, 1, std::chrono::hours(10), oneHourTruckFactory}, // 1 truck, 1 station
-            std::unordered_map<std::string, ILog::MachineSummary>{
+            {{
                 {"Truck_0", ILog::MachineSummary{
-                    std::map<std::string, ILog::StateSummary>{
+                    {{
                         {"Mining",    {5, std::chrono::hours(5)}},
                         {"Moving",    {9, std::chrono::minutes(270)}},
                         {"Arrived",   {5, std::chrono::minutes(0)}},
                         {"Unloading", {5, std::chrono::minutes(25)}}
-                    },
-                    {} // unfinished
+                    }},
+                    {}
+                }},
+                {"Station_0", ILog::MachineSummary{
+                    {{
+                        {"Unloading", {5, std::chrono::minutes(25)}}
+                    }},
+                    {}
                 }}
-            }
+            }}
         },
-        PredictedParams{
+        PredictedParams{  //test case 2
             {2, 2, std::chrono::hours(10), oneHourTruckFactory}, // 2 trucks, 2 stations
-            std::unordered_map<std::string, ILog::MachineSummary>{
+            {{
                 {"Truck_0", ILog::MachineSummary{
-                    std::map<std::string, ILog::StateSummary>{
+                    {{
                         {"Mining",    {5, std::chrono::hours(5)}},
                         {"Moving",    {9, std::chrono::minutes(270)}},
                         {"Arrived",   {5, std::chrono::minutes(0)}},
                         {"Unloading", {5, std::chrono::minutes(25)}}
-                    },
+                    }},
                     {}
                 }},
                 {"Truck_1", ILog::MachineSummary{
-                    std::map<std::string, ILog::StateSummary>{
+                    {{
                         {"Mining",    {5, std::chrono::hours(5)}},
                         {"Moving",    {9, std::chrono::minutes(270)}},
                         {"Arrived",   {5, std::chrono::minutes(0)}},
                         {"Unloading", {5, std::chrono::minutes(25)}}
-                    },
+                    }},
+                    {}
+                }},
+                {"Station_0", ILog::MachineSummary{
+                    {{
+                        {"Unloading", {5, std::chrono::minutes(25)}}
+                    }},
+                    {}
+                }},
+                {"Station_1", ILog::MachineSummary{
+                    {{
+                        {"Unloading", {5, std::chrono::minutes(25)}}
+                    }},
                     {}
                 }}
-            }
+            }}
         }
     )
 );
