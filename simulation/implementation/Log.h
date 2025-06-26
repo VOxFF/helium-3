@@ -20,9 +20,6 @@ public:
     // --- From ITruck ---
     void add(const Event& e) override;
 
-protected: 
-    std::string resolveState(const std::string& machineID, const State& state) const; 
-
 private: 
     std::vector<Event> m_events;
     VerboseLevel m_level;

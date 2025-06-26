@@ -8,7 +8,7 @@
 namespace Helium3 {
 
 namespace {
-const std::string PREFIX("Station-");
+const std::string PREFIX("Station_");
 } 
 
 void StationManager::initialize(unsigned int stationCount)

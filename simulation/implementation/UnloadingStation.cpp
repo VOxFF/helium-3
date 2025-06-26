@@ -39,6 +39,7 @@ Events UnloadingStation::enqueue(ITruck* truck) {
 
     Time currentTime = waitEvent.start;  // This will be set by simulation
     waitEvent.duration = getWaitTime(currentTime);
+    waitEvent.message += " at " + id();
     
     m_queue.push(truck);
 
@@ -78,14 +79,15 @@ Events UnloadingStation::startUnloading(ITruck* truck) {
     m_state = Unloading;
 
     auto events = truck->unload();
-    auto& moveEvent = events.front();
+    auto& unloadEvent = events.front();
+    unloadEvent.message += " at " + id();
     
 
-    m_currentUnloadingEnd = moveEvent.start + UNLOAD_TIME;
+    m_currentUnloadingEnd = unloadEvent.start + UNLOAD_TIME;
     
-    auto truckCbk = moveEvent.onExpiration;
-    //need to chain these events
-    moveEvent.onExpiration = [this, truckCbk]() -> Events {
+    auto truckCbk = unloadEvent.onExpiration;
+    // Need to chain these events
+    unloadEvent.onExpiration = [this, truckCbk]() -> Events {
         Events events = truckCbk ? truckCbk() : Events{};     
         events += dequeue();
         return events;

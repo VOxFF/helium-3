@@ -30,13 +30,15 @@ struct Event {
     State       state = -1;     ///< State the machine transitioned into
     Time        start = {};     ///< Absolute simulation time when the event begins
     Duration    duration = {};  ///< Duration of the event
+    std::string message;
     EventCallback onExpiration; ///< Triggered when the event is pulled from the queue (i.e., expires)
+ 
 
 
     /// Construct an event.
     Event() = default;
-    Event(const std::string& machineId, State state,  Time start, Duration duration, EventCallback onExpiration = {})
-        : machineId(machineId), state(std::move(state)), start(std::move(start)), duration(std::move(duration)), onExpiration(onExpiration) {}
+    Event(const std::string& machineId, State state,  Time start, Duration duration, EventCallback onExpiration = {}, const std::string& message = {})
+        : machineId(machineId), state(std::move(state)), start(std::move(start)), duration(std::move(duration)), message(message) ,onExpiration(onExpiration) {}
     
     virtual ~Event() = default;
 

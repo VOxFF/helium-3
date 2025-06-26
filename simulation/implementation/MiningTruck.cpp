@@ -15,11 +15,11 @@ constexpr Duration UNLOAD_TIME = std::chrono::minutes(5);
 
 const std::unordered_map<MiningTruck::StateID, std::string> STATE_NAMES = {
     {MiningTruck::Mining,           "Mining"},
-    {MiningTruck::MovingToStation,  "Moving to Unloading Station"},
-    {MiningTruck::ArrivedToStation, "Arrived at Unloading Station"},
-    {MiningTruck::WaitingToUnload,  "Waiting for Unloading"},
+    {MiningTruck::MovingToStation,  "Moving for unloading"},
+    {MiningTruck::ArrivedToStation, "Arrived for unloading"},
+    {MiningTruck::WaitingToUnload,  "Waiting for unloading"},
     {MiningTruck::Unloading,        "Unloading"},
-    {MiningTruck::MovingToMining,   "Returning to Mining Site"}
+    {MiningTruck::MovingToMining,   "Returning for mining"}
 };
 
 const std::string PREFIX("Truck_");
@@ -47,7 +47,7 @@ Duration MiningTruck::miningTime() const
 
 Event MiningTruck::makeEvent(Time start, Duration duration, EventCallback onExpirationCbk) const 
 {
-    return Event(id(), state(), start, duration, onExpirationCbk);
+    return Event(id(), state(), start, duration, onExpirationCbk, stateName(static_cast<StateID>(state())));
 }
 
 Events MiningTruck::startMining() {
