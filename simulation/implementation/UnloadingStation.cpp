@@ -35,7 +35,9 @@ Events UnloadingStation::enqueue(ITruck* truck) {
     // Truck needs to wait 
     auto events = truck->startWaiting();
     auto& unloadEvent = events.front();
-    unloadEvent.duration = WAIT_TIME * m_queue.size();
+    // Account for the truck currently unloading by adding 1
+    // to the number of vehicles already waiting in the queue.
+    unloadEvent.duration = WAIT_TIME * (m_queue.size() + 1);
     m_queue.push(truck);
 
     if (m_callback) 
