@@ -24,7 +24,7 @@ const std::string& UnloadingStation::stateName(UnloadingStation::StateID id)
 
 Events UnloadingStation::enqueue(ITruck* truck) 
 {
-    assert(truck);
+    assert(truck && "enqueue called with nullptr truck");
 
     if (m_unloading == nullptr) 
         return startUnloading(truck);
@@ -44,10 +44,9 @@ Events UnloadingStation::enqueue(ITruck* truck)
 Events UnloadingStation::dequeue() 
 {
     m_unloading = nullptr;
-
     if (m_queue.empty()) {
         m_state = Waiting;
-        return {};         // No Event
+        return {};  // No Event
     }
 
     auto truck = m_queue.front();
@@ -65,17 +64,15 @@ Events UnloadingStation::startUnloading(ITruck* truck)
 
     auto events = truck->unload();
     auto& unloadEvent = events.front();
+    
     unloadEvent.message += " at " + id();
-    
-    m_currentUnloadingEnd = unloadEvent.start + UNLOAD_TIME;
-    
-    auto truckCbk = unloadEvent.onExpiration;
-    unloadEvent.onExpiration = [this, truckCbk]() -> Events {
+    unloadEvent.onExpiration = [this, truckCbk = unloadEvent.onExpiration]() {
         Events events = truckCbk ? truckCbk() : Events{};     
         events += dequeue();
         return events;
     };
 
+    m_currentUnloadingEnd = unloadEvent.start + UNLOAD_TIME;
     return events;
 }
 
