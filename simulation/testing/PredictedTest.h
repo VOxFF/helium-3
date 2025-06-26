@@ -81,6 +81,4 @@ inline void PrintTo(const Helium3::Testing::PredictedParams& params, std::ostrea
         << "}";
 }
 
-
-
 } // namespace Helium3::Testing
