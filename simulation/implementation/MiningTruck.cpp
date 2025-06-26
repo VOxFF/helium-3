@@ -13,24 +13,43 @@ constexpr double MINING_TIME_MAX = 5.0;
 constexpr Duration DRIVE_TIME = std::chrono::minutes(30);
 constexpr Duration UNLOAD_TIME = std::chrono::minutes(5);
 
+const std::string PREFIX("Truck_");
+
 const std::unordered_map<MiningTruck::StateID, std::string> STATE_NAMES = {
+    {MiningTruck::Idle,             "Idle"},
     {MiningTruck::Mining,           "Mining"},
+    {MiningTruck::MovingToStation,  "Moving"},
+    {MiningTruck::ArrivedToStation, "Arrived"},
+    {MiningTruck::WaitingToUnload,  "Waiting"},
+    {MiningTruck::Unloading,        "Unloading"},
+    {MiningTruck::MovingToMining,   "Moving"}
+};
+
+
+const std::unordered_map<MiningTruck::StateID, std::string> STATE_MESSAGES = {
+    {MiningTruck::Mining,           "Mining in progress"},
     {MiningTruck::MovingToStation,  "Moving for unloading"},
     {MiningTruck::ArrivedToStation, "Arrived for unloading"},
     {MiningTruck::WaitingToUnload,  "Waiting for unloading"},
-    {MiningTruck::Unloading,        "Unloading"},
+    {MiningTruck::Unloading,        "Unloading in progresss"},
     {MiningTruck::MovingToMining,   "Returning for mining"}
 };
 
-const std::string PREFIX("Truck_");
+const std::string& stateName(MiningTruck::StateID id) {
+    auto it = STATE_NAMES.find(id);
+    static const std::string undefined = "Undefined";
+    return (it != STATE_NAMES.end()) ? it->second : undefined;
+}
+
+const std::string& stateMessage(MiningTruck::StateID id) {
+    auto it = STATE_MESSAGES.find(id);
+    static const std::string undefined = "Undefined";
+    return (it != STATE_MESSAGES.end()) ? it->second : undefined;
+}
 
 } // end of anonymous namespace
 
-const std::string& MiningTruck::stateName(MiningTruck::StateID id) {
-    auto it = STATE_NAMES.find(id);
-    static const std::string idle = "Idle";
-    return (it != STATE_NAMES.end()) ? it->second : idle;
-}
+
 
 const std::string& MiningTruck::namePrefix() {
     return PREFIX;
@@ -47,7 +66,8 @@ Duration MiningTruck::miningTime() const
 
 Event MiningTruck::makeEvent(Time start, Duration duration, EventCallback onExpirationCbk) const 
 {
-    return Event(id(), state(), start, duration, onExpirationCbk, stateName(static_cast<StateID>(state())));
+    auto stateID = static_cast<StateID>(state());
+    return Event(id(), state(), stateName(stateID), start, duration, onExpirationCbk, stateMessage(stateID));
 }
 
 Events MiningTruck::startMining() {

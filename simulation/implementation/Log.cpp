@@ -8,14 +8,18 @@
 namespace Helium3 {
 namespace {
 
-std::string toString(const Time& t) {
+const ILog::MachineSummary UNDEFINED{{"Undefined", {}},{{"Undefined", {}}}};
+
+std::string toString(const Time& t) 
+{
     auto timeT = std::chrono::system_clock::to_time_t(t);
     std::ostringstream oss;
     oss << std::put_time(std::localtime(&timeT), "%T"); // "HH:MM:SS"
     return oss.str();
 }
 
-std::string toString(const Duration& d) {
+std::string toString(const Duration& d) 
+{
     using namespace std::chrono;
 
     auto total_seconds = duration_cast<seconds>(d).count();
@@ -37,7 +41,8 @@ std::string toString(const Duration& d) {
 
 } //end of anonimous namespace 
 
-void Log::add(const Event& e) {
+void Log::add(const Event& e, TaskState taskState) 
+{
     if (m_level == Console) {
         std::cout 
             << e.machineId << ":\t"
@@ -47,7 +52,23 @@ void Log::add(const Event& e) {
             << e.message << std::endl;
     }
 
-    m_events.push_back(e);
+    // If we want to collect all the records
+    //m_events.push_back(e);
+
+    auto& machineStat = m_stats[e.machineId];
+    auto& collection = taskState == TaskState::Complette ? machineStat.complette : machineStat.unfinshed;
+    auto& record = collection[e.name];
+
+    record.occurrences++;
+    record.totalDuration += e.duration;
+}
+
+const ILog::MachineSummary& Log::summary(const std::string& machienId) const 
+{
+    if(auto it = m_stats.find(machienId); it != m_stats.end())
+        return it->second;
+
+    return UNDEFINED;
 }
 
 

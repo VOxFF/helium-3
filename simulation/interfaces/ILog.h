@@ -10,21 +10,22 @@ class ILog {
 public:
     virtual ~ILog() = default;
 
+    enum class TaskState {
+        Complette,
+        Unfinished
+    };
+
     struct StateSummary {
         size_t occurrences = 0;
         Duration totalDuration{};
-        std::string message;
     };
     struct MachineSummary {
-        std::string machineId;
-        std::map<int, StateSummary> complette;
-        std::map<int, StateSummary> unfinshed;
+        std::map<std::string, StateSummary> complette;
+        std::map<std::string, StateSummary> unfinshed;
     };
 
-
-
-    virtual void add(const Event& e) = 0;
-    
+    virtual void add(const Event& e, TaskState taskState = TaskState::Complette) = 0;
+    virtual const MachineSummary& summary(const std::string& machienId) const = 0;
 };
 
 }   //end of namespace Helium3

@@ -28,17 +28,19 @@ using EventCallback = std::function<std::vector<struct Event>(void)>;
 struct Event {
     std::string machineId;      ///< ID of the machine that triggered the event
     State       state = -1;     ///< State the machine transitioned into
+    std::string name;           ///< Short event name for logging
     Time        start = {};     ///< Absolute simulation time when the event begins
     Duration    duration = {};  ///< Duration of the event
-    std::string message;
+    std::string message;        ///< Extended message for logging
     EventCallback onExpiration; ///< Triggered when the event is pulled from the queue (i.e., expires)
  
 
 
     /// Construct an event.
     Event() = default;
-    Event(const std::string& machineId, State state,  Time start, Duration duration, EventCallback onExpiration = {}, const std::string& message = {})
-        : machineId(machineId), state(std::move(state)), start(std::move(start)), duration(std::move(duration)), message(message) ,onExpiration(onExpiration) {}
+    Event(const std::string& machineId, State state, const std::string& name, 
+            Time start,  Duration duration, EventCallback onExpiration = {}, const std::string& message = {})
+        : machineId(machineId), state(std::move(state)), name(name), start(std::move(start)), duration(std::move(duration)), message(message) ,onExpiration(onExpiration) {}
     
     virtual ~Event() = default;
 

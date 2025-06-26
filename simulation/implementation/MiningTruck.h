@@ -19,7 +19,7 @@ public:
         MovingToMining,
     };
 
-    static const std::string& stateName(StateID id);
+    
     static const std::string& namePrefix();
 
     // --- From IMachine ---

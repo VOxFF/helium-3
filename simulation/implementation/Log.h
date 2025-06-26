@@ -3,7 +3,9 @@
 
 #include "interfaces/ILog.h"
 
-#include <vector>
+#include <unordered_map>
+
+
 
 namespace Helium3 {
 
@@ -18,12 +20,12 @@ public:
     virtual ~Log() = default;
 
     // --- From ITruck ---
-    void add(const Event& e) override;
+    void add(const Event& e, TaskState taskState) override;
+    const MachineSummary& summary(const std::string& machienId) const override;
 
 private: 
-    std::vector<Event> m_events;
     VerboseLevel m_level;
-    
+    std::unordered_map<std::string, MachineSummary> m_stats;
 };
 
 }   //end of namespace Helium3
