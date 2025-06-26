@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 namespace Helium3 {
 
@@ -30,6 +31,15 @@ public:
      * @return A vector of pointers to ITruck instances.
      */
     virtual std::vector<ITruck*> trucks() const = 0;
+
+
+    /**
+     * @brief Retrieves a pointer to the truck with the given ID.
+     *
+     * @param id The unique identifier of the truck to retrieve.
+     * @return A pointer to the corresponding ITruck instance, or nullptr if not found.
+     */
+    virtual ITruck* truck(const std::string& id) const = 0;
 
     // --- More truck-managing API will appear here ---
 };

@@ -33,7 +33,7 @@ std::vector<IStation*> StationManager::stations() const
 }
 
 
-IStation* StationManager::getOptimalStation() const 
+IStation* StationManager::getOptimalStation(const Time& currentTime) const 
 {
     assert(!m_stations.empty());
     
@@ -47,7 +47,7 @@ IStation* StationManager::getOptimalStation() const
     // All stations are occupied, find the one with shortest wait time
     IStation* bestStation = nullptr;
     Duration minWaitTime = Duration::max();
-    Time currentTime = Time{}; // This is a simplification - ideally should pass current simulation time
+    //Time currentTime = Time{}; // This is a simplification - ideally should pass current simulation time
     
     for (const auto& station : m_stations) {
         Duration waitTime = station->getWaitTime(currentTime);

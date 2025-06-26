@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <functional>
+#include <unordered_map>
 
 namespace Helium3 {
 
@@ -18,19 +19,19 @@ public:
      *
      * @param factory Optional function that creates a truck for a given index.
      */
-    TrucksManager(IStationManager& mgr, TruckFactory factory = {}) : m_stationManager(mgr) ,m_truckFactory(factory) {}
+    TrucksManager(TruckFactory factory = {}) : m_truckFactory(factory) {}
     virtual ~TrucksManager() = default;
 
     // --- From ITrucksManager ---
     void initialize(unsigned int truckCount) override;
     std::vector<ITruck*> trucks() const override;
+    ITruck* truck(const std::string& id) const override;
 
     // --- More truck-managing API will appear here ---
 
 private:
-    IStationManager& m_stationManager;
     TruckFactory m_truckFactory;
-    std::vector<std::shared_ptr<ITruck>> m_trucks;
+    std::unordered_map<std::string, std::shared_ptr<ITruck>> m_trucks;
 };
 
 

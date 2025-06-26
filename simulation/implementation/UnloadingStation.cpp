@@ -36,7 +36,7 @@ Events UnloadingStation::enqueue(ITruck* truck) {
     auto events = truck->startWaiting();
     auto& waitEvent = events.front();
     
-    // *** FIX: Calculate actual wait time based on current unloading and queue ***
+
     Time currentTime = waitEvent.start;  // This will be set by simulation
     waitEvent.duration = getWaitTime(currentTime);
     
@@ -45,7 +45,6 @@ Events UnloadingStation::enqueue(ITruck* truck) {
     if (m_callback) 
         m_callback();  // Notify manager of queue size change
 
-    // *** FIX: Don't call truck's unload() directly, just trigger dequeue ***
     waitEvent.onExpiration = [this]() -> Events {
         return dequeue();
     };

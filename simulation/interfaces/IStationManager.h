@@ -1,5 +1,7 @@
 #pragma once
 
+#include "common/Time.h"
+
 #include <vector>
 #include <memory>
 
@@ -31,7 +33,7 @@ public:
      * Current selection logic may be based on minimal queue size,
      * round-robin distribution, or other heuristics depending on implementation.
      */
-    virtual IStation* getOptimalStation() const = 0; 
+    virtual IStation* getOptimalStation(const Time& current) const = 0; 
 };
 
 } // namespace Helium3

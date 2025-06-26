@@ -15,7 +15,7 @@ public:
     // --- From IStation ---
     void initialize(unsigned int stationCount) override;   
     std::vector<IStation*> stations() const override;
-    IStation* getOptimalStation() const override;
+    IStation* getOptimalStation(const Time& current) const override;
 
 private:
     std::vector<std::shared_ptr<IStation>> m_stations;

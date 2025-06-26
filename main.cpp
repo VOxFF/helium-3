@@ -9,10 +9,9 @@ using namespace Helium3;
 using namespace Helium3::Testing;
 
 auto oneHourTruckFactory =
-  [](IStationManager& mgr, int idx) -> std::shared_ptr<ITruck> {
+  [](int idx) -> std::shared_ptr<ITruck> {
     return std::make_shared<FixedTimeTruck>(
-      mgr,
-      FixedTimeTruck::namePrefix() + std::to_string(idx),       
+      MiningTruck::namePrefix() + std::to_string(idx),       
       std::chrono::hours(1)
     );
 };

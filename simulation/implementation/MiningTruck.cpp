@@ -1,6 +1,4 @@
 #include "MiningTruck.h"
-#include "interfaces/IStation.h"
-#include "interfaces/IStationManager.h"
 
 #include <unordered_map>
 #include <random>
@@ -78,11 +76,10 @@ Events MiningTruck::checkinAtStation() {
     assert(m_state == MovingToStation);
     m_state = ArrivedToStation;
 
-    auto station = m_stationManager.getOptimalStation();
     return { makeEvent(
         Time{}, 
         Duration{}, // zero-duration event
-         [this, station]() { return station->enqueue(this); }
+        {}          // Handled by Station Manager
     )};
 }
 
