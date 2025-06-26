@@ -11,7 +11,7 @@ public:
 
     enum StateID {
         Idle = -1,              ///< Special state used for initialization
-        Mining = 10,
+        Mining,
         MovingToStation,
         ArrivedToStation,
         WaitingToUnload,

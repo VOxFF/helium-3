@@ -9,18 +9,21 @@ namespace {
 constexpr Duration UNLOAD_TIME = std::chrono::minutes(5);
 
 const std::unordered_map<UnloadingStation::StateID, std::string> STATE_NAMES = {
+    {UnloadingStation::Idle,        "Idle"},
     {UnloadingStation::Unloading,   "Unloading"},
     {UnloadingStation::Waiting,     "Waiting"}
 };
 
-} // end of anonymous namespace
-
-const std::string& UnloadingStation::stateName(UnloadingStation::StateID id) 
+const std::string& stateName(UnloadingStation::StateID id) 
 {
     auto it = STATE_NAMES.find(id);
-    static const std::string idle = "Idle";
-    return (it != STATE_NAMES.end()) ? it->second : idle;
+    static const std::string undefined = "Undefined";
+    return (it != STATE_NAMES.end()) ? it->second : undefined;
 }
+
+} // end of anonymous namespace
+
+
 
 Events UnloadingStation::enqueue(ITruck* truck) 
 {
@@ -71,6 +74,10 @@ Events UnloadingStation::startUnloading(ITruck* truck)
         events += dequeue();
         return events;
     };
+
+    // Add event for logging Station activity
+    auto stateID = static_cast<StateID>(state());
+    events.push_back(Event(id(), state(), stateName(stateID), {}, UNLOAD_TIME, {}, stateName(stateID) + " of " + truck->id()));
 
     m_currentUnloadingEnd = unloadEvent.start + UNLOAD_TIME;
     return events;

@@ -31,11 +31,9 @@ public:
     enum StateID {
         Idle = -1,     ///< Initial or reset state
         Unloading,     ///< Actively unloading a truck
-        Waiting,       ///< Not uloading and no trucks in queue, waiting for Truck arrival
-        StatesCount    ///< Number of defined states (excluding Idle)
+        Waiting        ///< Not uloading and no trucks in queue, waiting for Truck arrival
     };
 
-    static const std::string& stateName(StateID id);
 
     // --- From IMachine ---
     const std::string& id() const override { return m_id; }
