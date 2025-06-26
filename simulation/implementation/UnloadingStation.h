@@ -15,8 +15,6 @@ namespace Helium3 {
  */
 class UnloadingStation : public IStation {
 public:
-    using Callback = std::function<void()>;
-
     /**
      * @brief Constructs an unloading station with a unique identifier.
      * 
@@ -25,8 +23,8 @@ public:
      *                  changes and priority ordering needs to be updated externally 
      *                  (e.g., in a stations manager).
      */
-    explicit UnloadingStation(const std::string& id, Callback callback = {})
-        : m_id(id), m_state(Idle), m_unloading(nullptr), m_currentUnloadingEnd(Time{}), m_callback(callback) {}
+    explicit UnloadingStation(const std::string& id)
+        : m_id(id), m_state(Idle), m_unloading(nullptr), m_currentUnloadingEnd(Time{}) {}
 
     ~UnloadingStation() override = default;
 
@@ -79,8 +77,6 @@ private:
     
   
     Time m_currentUnloadingEnd;  ///< When current truck will finish unloading
-
-    Callback m_callback;        ///< Callback to update ordering of station prirorities
 };
 
 } // namespace Helium3

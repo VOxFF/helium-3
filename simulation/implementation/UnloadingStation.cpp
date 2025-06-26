@@ -15,64 +15,49 @@ const std::unordered_map<UnloadingStation::StateID, std::string> STATE_NAMES = {
 
 } // end of anonymous namespace
 
-const std::string& UnloadingStation::stateName(UnloadingStation::StateID id) {
+const std::string& UnloadingStation::stateName(UnloadingStation::StateID id) 
+{
     auto it = STATE_NAMES.find(id);
     static const std::string idle = "Idle";
     return (it != STATE_NAMES.end()) ? it->second : idle;
 }
 
-Events UnloadingStation::enqueue(ITruck* truck) {
+Events UnloadingStation::enqueue(ITruck* truck) 
+{
     assert(truck);
 
-    if (m_unloading == nullptr) {
-        auto events = startUnloading(truck);
-        if (m_callback) 
-            m_callback();  // Notify manager
-
-        return events;
-    }
+    if (m_unloading == nullptr) 
+        return startUnloading(truck);
 
     // Truck needs to wait 
     auto events = truck->startWaiting();
     auto& waitEvent = events.front();
     
-
-    Time currentTime = waitEvent.start;  // This will be set by simulation
-    waitEvent.duration = getWaitTime(currentTime);
+    waitEvent.duration = getWaitTime(waitEvent.start);
     waitEvent.message += " at " + id();
-    
+    waitEvent.onExpiration = [this]() { return dequeue(); };
     m_queue.push(truck);
-
-    if (m_callback) 
-        m_callback();  // Notify manager of queue size change
-
-    waitEvent.onExpiration = [this]() -> Events {
-        return dequeue();
-    };
 
     return events;
 }
 
-Events UnloadingStation::dequeue() {
+Events UnloadingStation::dequeue() 
+{
     m_unloading = nullptr;
 
     if (m_queue.empty()) {
         m_state = Waiting;
-        if (m_callback) 
-            m_callback();  // Notify manager: now idle
-        return {};         // We do not know wait duration
+        return {};         // No Event
     }
 
     auto truck = m_queue.front();
     m_queue.pop();
 
-    auto events = startUnloading(truck);
-    if (m_callback) 
-        m_callback();  // Notify manager: new truck started
-    return events;
+    return startUnloading(truck);
 }
 
-Events UnloadingStation::startUnloading(ITruck* truck) {
+Events UnloadingStation::startUnloading(ITruck* truck) 
+{
     assert(truck && "startUnloading called with nullptr truck");
 
     m_unloading = truck;
@@ -82,11 +67,9 @@ Events UnloadingStation::startUnloading(ITruck* truck) {
     auto& unloadEvent = events.front();
     unloadEvent.message += " at " + id();
     
-
     m_currentUnloadingEnd = unloadEvent.start + UNLOAD_TIME;
     
     auto truckCbk = unloadEvent.onExpiration;
-    // Need to chain these events
     unloadEvent.onExpiration = [this, truckCbk]() -> Events {
         Events events = truckCbk ? truckCbk() : Events{};     
         events += dequeue();
@@ -97,13 +80,13 @@ Events UnloadingStation::startUnloading(ITruck* truck) {
 }
 
 
-Duration UnloadingStation::getWaitTime(Time currentTime) const {
+Duration UnloadingStation::getWaitTime(Time currentTime) const 
+{
     Duration waitTime = Duration::zero();
     
     // If there's a truck currently unloading, add remaining time
-    if (m_unloading != nullptr && m_currentUnloadingEnd > currentTime) {
+    if (m_unloading != nullptr && m_currentUnloadingEnd > currentTime) 
         waitTime += m_currentUnloadingEnd - currentTime;
-    }
     
     // Add time for all trucks in queue (5 minutes each)
     waitTime += UNLOAD_TIME * m_queue.size();

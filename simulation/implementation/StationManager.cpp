@@ -46,8 +46,7 @@ IStation* StationManager::getOptimalStation(const Time& currentTime) const
     
     // All stations are occupied, find the one with shortest wait time
     IStation* bestStation = nullptr;
-    Duration minWaitTime = Duration::max();
-    //Time currentTime = Time{}; // This is a simplification - ideally should pass current simulation time
+    auto minWaitTime = Duration::max();
     
     for (const auto& station : m_stations) {
         Duration waitTime = station->getWaitTime(currentTime);
