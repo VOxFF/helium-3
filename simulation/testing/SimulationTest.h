@@ -39,7 +39,7 @@ This test is used with non-random mining / predicatable mining duratons
 */
 struct PredictedParams {
     SimulationParams simulatonParams;
-    std::vector<std::string> expectedLogs;
+    std::unordered_map<std::string, ILog::MachineSummary> expectedSummary;
 };
 
 
@@ -49,6 +49,37 @@ protected:
         init(GetParam().simulatonParams);
     }
 };
+
+inline void PrintTo(const Helium3::Testing::PredictedParams& params, std::ostream* os) {
+    *os << "PredictedParams {\n"
+        << "  trucks   = " << params.simulatonParams.truckCount << ",\n"
+        << "  stations = " << params.simulatonParams.stationCount << ",\n"
+        << "  duration = " 
+        << std::chrono::duration_cast<std::chrono::hours>(params.simulatonParams.simulationLength).count() << "h,\n"
+        << "  expected = {\n";
+
+    for (const auto& [machineId, summary] : params.expectedSummary) {
+        *os << "    " << machineId << " => {\n";
+        *os << "      complette = {\n";
+        for (const auto& [state, stats] : summary.complette) {
+            *os << "        " << state
+                << ": (" << stats.occurrences << "x, "
+                << std::chrono::duration_cast<std::chrono::minutes>(stats.totalDuration).count() << "m)\n";
+        }
+        *os << "      },\n";
+        *os << "      unfinshed = {\n";
+        for (const auto& [state, stats] : summary.unfinshed) {
+            *os << "        " << state
+                << ": (" << stats.occurrences << "x, "
+                << std::chrono::duration_cast<std::chrono::minutes>(stats.totalDuration).count() << "m)\n";
+        }
+        *os << "      }\n";
+        *os << "    },\n";
+    }
+
+    *os << "  }\n"
+        << "}";
+}
 
 
 

@@ -18,20 +18,74 @@ auto oneHourTruckFactory =
 
 
 INSTANTIATE_TEST_SUITE_P(
-    PredictedScenarios,         // Test suite group (prefix for test names)
-    PredictedTest,              // Test class
-    ::testing::Values(          // Test parameters
-        PredictedParams{{1, 1, std::chrono::hours(10), oneHourTruckFactory}, {}}, //1 truck, 1 station
-        PredictedParams{{2, 2, std::chrono::hours(10), oneHourTruckFactory}, {}}  //1 trucks, 1 stations
+    PredictedScenarios,
+    PredictedTest,
+    ::testing::Values(
+        PredictedParams{
+            {1, 1, std::chrono::hours(10), oneHourTruckFactory}, // 1 truck, 1 station
+            std::unordered_map<std::string, ILog::MachineSummary>{
+                {"Truck_0", ILog::MachineSummary{
+                    std::map<std::string, ILog::StateSummary>{
+                        {"Mining",    {5, std::chrono::hours(5)}},
+                        {"Moving",    {9, std::chrono::minutes(270)}},
+                        {"Arrived",   {5, std::chrono::minutes(0)}},
+                        {"Unloading", {5, std::chrono::minutes(25)}}
+                    },
+                    {} // unfinished
+                }}
+            }
+        },
+        PredictedParams{
+            {2, 2, std::chrono::hours(10), oneHourTruckFactory}, // 2 trucks, 2 stations
+            std::unordered_map<std::string, ILog::MachineSummary>{
+                {"Truck_0", ILog::MachineSummary{
+                    std::map<std::string, ILog::StateSummary>{
+                        {"Mining",    {5, std::chrono::hours(5)}},
+                        {"Moving",    {9, std::chrono::minutes(270)}},
+                        {"Arrived",   {5, std::chrono::minutes(0)}},
+                        {"Unloading", {5, std::chrono::minutes(25)}}
+                    },
+                    {}
+                }},
+                {"Truck_1", ILog::MachineSummary{
+                    std::map<std::string, ILog::StateSummary>{
+                        {"Mining",    {5, std::chrono::hours(5)}},
+                        {"Moving",    {9, std::chrono::minutes(270)}},
+                        {"Arrived",   {5, std::chrono::minutes(0)}},
+                        {"Unloading", {5, std::chrono::minutes(25)}}
+                    },
+                    {}
+                }}
+            }
+        }
     )
 );
 
+
 /*
-1 - one hour truck, 1 station, total time 10 hrs, anticipated
-5 ming -> unloading cycles, simulation finishes when truck travesl back to Mining Site
+Check against predicted resuslts for fixed time mining
 */
-TEST_P(PredictedTest, BasicSimulationRuns) {
+TEST_P(PredictedTest, BasicSimulationRuns) 
+{
     ASSERT_NO_THROW(run());
+
+    const auto& expected = GetParam().expectedSummary;
+    for (const auto& [machineId, expectedSummary] : expected) 
+    {
+        const auto& actualSummary = m_simulation->log().summary(machineId);
+
+        for (const auto& [state, expectedState] : expectedSummary.complette) 
+        {
+            const auto& actualState = actualSummary.complette.at(state);
+            
+            std::cout << "[Check] " << machineId << " - " << state
+                << ": expected " << expectedState.occurrences << "x/" << toString(expectedState.totalDuration) << ", "
+                << "actual " << actualState.occurrences << "x/" << toString(actualState.totalDuration) << std::endl;
+
+            EXPECT_EQ(actualState.occurrences, expectedState.occurrences);
+            EXPECT_EQ(actualState.totalDuration, expectedState.totalDuration);
+        }
+    }
 }
 
 int main(int argc, char** argv) 

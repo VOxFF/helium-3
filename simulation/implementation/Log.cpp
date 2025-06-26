@@ -8,36 +8,10 @@
 namespace Helium3 {
 namespace {
 
-const ILog::MachineSummary UNDEFINED{{"Undefined", {}},{{"Undefined", {}}}};
-
-std::string toString(const Time& t) 
-{
-    auto timeT = std::chrono::system_clock::to_time_t(t);
-    std::ostringstream oss;
-    oss << std::put_time(std::localtime(&timeT), "%T"); // "HH:MM:SS"
-    return oss.str();
-}
-
-std::string toString(const Duration& d) 
-{
-    using namespace std::chrono;
-
-    auto total_seconds = duration_cast<seconds>(d).count();
-    int hours = total_seconds / 3600;
-    int minutes = (total_seconds % 3600) / 60;
-    int seconds = total_seconds % 60;
-
-    std::ostringstream oss;
-    if (hours > 0)
-        oss << hours << "h ";
-    if (minutes > 0)
-        oss << minutes << "m ";
-    if (seconds > 0 || (hours == 0 && minutes == 0)) 
-        oss << seconds << "s";
-
-    return oss.str();
-}
-
+const ILog::MachineSummary UNDEFINED{
+    { {"Undefined", {}} },   // complette
+    { {"Undefined", {}} }    // unfinshed
+};
 
 } //end of anonimous namespace 
 
@@ -45,11 +19,14 @@ void Log::add(const Event& e, TaskState taskState)
 {
     if (m_level == Console) {
         std::cout 
-            << e.machineId << ":\t"
-            << toString(e.start) << " -> " 
-            << toString(e.end()) << " = "
-            << toString(e.duration) << "\t"
-            << e.message << std::endl;
+            << std::left
+            << std::setw(10) << (e.machineId + ":")             // "Truck_0:"
+            << std::setw(14) << ("(" + e.name + ")")            // "(Unloading)"
+            << std::setw(8) << toString(e.start) << " -> "      // "19:21:40"
+            << std::setw(8) << toString(e.end())  << " = "      // "19:26:40"
+            << std::setw(6) << toString(e.duration)  << "  "    // "5m", "30m"
+            << e.message
+            << std::endl;
     }
 
     // If we want to collect all the records
@@ -70,7 +47,5 @@ const ILog::MachineSummary& Log::summary(const std::string& machienId) const
 
     return UNDEFINED;
 }
-
-
 
 }   //end of namespace Helium3

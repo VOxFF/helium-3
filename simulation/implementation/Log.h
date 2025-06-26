@@ -5,8 +5,6 @@
 
 #include <unordered_map>
 
-
-
 namespace Helium3 {
 
 class Log : public ILog {
