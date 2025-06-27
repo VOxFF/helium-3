@@ -5,10 +5,10 @@
 namespace Helium3::Testing {
 
 /*
-This test is used with non-random mining / predicatable mining duratons 
+This test is used with non-random mining / predictable mining durations 
 */
 struct PredictedParams {
-    SimulationParams simulatonParams;
+    SimulationParams simulationParams;
     std::unordered_map<std::string, ILog::MachineSummary> expectedSummary;
 };
 
@@ -16,7 +16,7 @@ struct PredictedParams {
 class PredictedTest : public SimulationTest, public ::testing::TestWithParam<PredictedParams> {
 protected:
     void SetUp() override {
-        init(GetParam().simulatonParams);
+        init(GetParam().simulationParams);
     }
 };
 

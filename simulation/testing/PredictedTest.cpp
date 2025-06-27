@@ -26,7 +26,7 @@ INSTANTIATE_TEST_SUITE_P(
             {{
                 {"Truck_0", ILog::MachineSummary{
                     {{
-                        // complette
+                        // complete
                         {"Mining",    {5, std::chrono::hours(5)}},
                         {"Moving",    {9, std::chrono::minutes(270)}},
                         {"Arrived",   {5, std::chrono::minutes(0)}},
@@ -39,7 +39,7 @@ INSTANTIATE_TEST_SUITE_P(
                 }},
                 {"Station_0", ILog::MachineSummary{
                     {{
-                        // complette
+                        // complete
                         {"Unloading", {5, std::chrono::minutes(25)}}
                     }},
                     {
@@ -53,7 +53,7 @@ INSTANTIATE_TEST_SUITE_P(
             {{
                 {"Truck_0", ILog::MachineSummary{
                     {{
-                        // complette
+                        // complete
                         {"Mining",    {5, std::chrono::hours(5)}},
                         {"Moving",    {9, std::chrono::minutes(270)}},
                         {"Arrived",   {5, std::chrono::minutes(0)}},
@@ -66,7 +66,7 @@ INSTANTIATE_TEST_SUITE_P(
                 }},
                 {"Truck_1", ILog::MachineSummary{
                     {{
-                        // complette
+                        // complete
                         {"Mining",    {5, std::chrono::hours(5)}},
                         {"Moving",    {9, std::chrono::minutes(270)}},
                         {"Arrived",   {5, std::chrono::minutes(0)}},
@@ -79,7 +79,7 @@ INSTANTIATE_TEST_SUITE_P(
                 }},
                 {"Station_0", ILog::MachineSummary{
                     {{
-                        // complette
+                        // complete
                         {"Unloading", {5, std::chrono::minutes(25)}}
                     }},
                     {
@@ -88,7 +88,7 @@ INSTANTIATE_TEST_SUITE_P(
                 }},
                 {"Station_1", ILog::MachineSummary{
                     {{
-                        // complette
+                        // complete
                         {"Unloading", {5, std::chrono::minutes(25)}}
                     }},
                     {
@@ -103,7 +103,7 @@ INSTANTIATE_TEST_SUITE_P(
                 
                 {"Truck_0", ILog::MachineSummary{
                     {{
-                        // complette
+                        // complete
                         {"Mining",    {5, std::chrono::hours(5)}},
                         {"Moving",    {9, std::chrono::minutes(270)}},
                         {"Arrived",   {5, std::chrono::minutes(0)}},
@@ -117,7 +117,7 @@ INSTANTIATE_TEST_SUITE_P(
                 }},
                 {"Truck_1", ILog::MachineSummary{
                     {{
-                        // complette
+                        // complete
                         {"Mining",    {5, std::chrono::hours(5)}},
                         {"Moving",    {9, std::chrono::minutes(270)}},
                         {"Arrived",   {5, std::chrono::minutes(0)}},
@@ -130,7 +130,7 @@ INSTANTIATE_TEST_SUITE_P(
                 }},
                 {"Station_0", ILog::MachineSummary{
                     {{
-                        // complette
+                        // complete
                         {"Unloading", {9, std::chrono::minutes(45)}}
                     }},
                     {{
@@ -145,7 +145,7 @@ INSTANTIATE_TEST_SUITE_P(
 
 
 /*
-Check against predicted resuslts for fixed time mining
+Check against predicted results for fixed time mining
 */
 TEST_P(PredictedTest, BasicSimulationRuns) 
 {
@@ -156,9 +156,9 @@ TEST_P(PredictedTest, BasicSimulationRuns)
     {
         const auto& actualSummary = m_simulation->log().summary(machineId);
 
-        for (const auto& [state, expectedState] : expectedSummary.complette) 
+        for (const auto& [state, expectedState] : expectedSummary.complete) 
         {
-            const auto& actualState = actualSummary.complette.at(state);
+            const auto& actualState = actualSummary.complete.at(state);
             
             std::cout << "[Check] " << machineId << " - " << state
                 << ": expected " << expectedState.occurrences << "x/" << toString(expectedState.totalDuration) << ", "
@@ -173,23 +173,23 @@ TEST_P(PredictedTest, BasicSimulationRuns)
 
 inline void PrintTo(const Helium3::Testing::PredictedParams& params, std::ostream* os) {
     *os << "PredictedParams {\n"
-        << "  trucks   = " << params.simulatonParams.truckCount << ",\n"
-        << "  stations = " << params.simulatonParams.stationCount << ",\n"
+        << "  trucks   = " << params.simulationParams.truckCount << ",\n"
+        << "  stations = " << params.simulationParams.stationCount << ",\n"
         << "  duration = " 
-        << std::chrono::duration_cast<std::chrono::hours>(params.simulatonParams.simulationLength).count() << "h,\n"
+        << std::chrono::duration_cast<std::chrono::hours>(params.simulationParams.simulationLength).count() << "h,\n"
         << "  expected = {\n";
 
     for (const auto& [machineId, summary] : params.expectedSummary) {
         *os << "    " << machineId << " => {\n";
-        *os << "      complette = {\n";
-        for (const auto& [state, stats] : summary.complette) {
+        *os << "      complete = {\n";
+        for (const auto& [state, stats] : summary.complete) {
             *os << "        " << state
                 << ": (" << stats.occurrences << "x, "
                 << std::chrono::duration_cast<std::chrono::minutes>(stats.totalDuration).count() << "m)\n";
         }
         *os << "      },\n";
-        *os << "      unfinshed = {\n";
-        for (const auto& [state, stats] : summary.unfinshed) {
+        *os << "      unfinished = {\n";
+        for (const auto& [state, stats] : summary.unfinished) {
             *os << "        " << state
                 << ": (" << stats.occurrences << "x, "
                 << std::chrono::duration_cast<std::chrono::minutes>(stats.totalDuration).count() << "m)\n";

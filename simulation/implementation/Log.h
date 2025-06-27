@@ -19,7 +19,7 @@ public:
 
     // --- From ITruck ---
     void add(const Event& e, TaskState taskState) override;
-    const MachineSummary& summary(const std::string& machienId) const override;
+    const MachineSummary& summary(const std::string& machineId) const override;
 
 private: 
     VerboseLevel m_level;

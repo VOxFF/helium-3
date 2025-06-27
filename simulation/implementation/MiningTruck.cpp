@@ -31,7 +31,7 @@ const std::unordered_map<MiningTruck::StateID, std::string> STATE_MESSAGES = {
     {MiningTruck::MovingToStation,  "Moving for unloading"},
     {MiningTruck::ArrivedToStation, "Arrived for unloading"},
     {MiningTruck::WaitingToUnload,  "Waiting for unloading"},
-    {MiningTruck::Unloading,        "Unloading in progresss"},
+    {MiningTruck::Unloading,        "Unloading in progress"},
     {MiningTruck::MovingToMining,   "Returning for mining"}
 };
 

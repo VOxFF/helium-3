@@ -5,7 +5,7 @@
 namespace Helium3 {
 
 /**
- *  State of the IMachien Idle, Mining etc
+ *  State of the IMachine: Idle, Mining, etc.
  * let's start simple, then State can be replaced by class and grow
  */
 using State = int;

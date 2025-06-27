@@ -31,7 +31,7 @@ public:
     enum StateID {
         Idle = -1,     ///< Initial or reset state
         Unloading,     ///< Actively unloading a truck
-        Waiting        ///< Not uloading and no trucks in queue, waiting for Truck arrival
+        Waiting        ///< Not unloading and no trucks in queue, waiting for Truck arrival
     };
 
 
