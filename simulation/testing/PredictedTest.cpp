@@ -8,7 +8,7 @@
 
 namespace Helium3::Testing {
 
-    auto oneHourTruckFactory =
+auto oneHourTruckFactory =
   [](int idx) -> std::shared_ptr<ITruck> {
     return std::make_shared<FixedTimeTruck>(
       MiningTruck::namePrefix() + std::to_string(idx),       
@@ -22,22 +22,29 @@ INSTANTIATE_TEST_SUITE_P(
     PredictedTest,
     ::testing::Values(
         PredictedParams{  //test case 1
-            {1, 1, std::chrono::hours(10), oneHourTruckFactory}, // 1 truck, 1 station
+            {1, 1, std::chrono::hours(10) + std::chrono::minutes(10), oneHourTruckFactory}, // 1 truck, 1 station
             {{
                 {"Truck_0", ILog::MachineSummary{
                     {{
+                        // complette
                         {"Mining",    {5, std::chrono::hours(5)}},
                         {"Moving",    {9, std::chrono::minutes(270)}},
                         {"Arrived",   {5, std::chrono::minutes(0)}},
                         {"Unloading", {5, std::chrono::minutes(25)}}
                     }},
-                    {}
+                    {{
+                        // unfinished
+                        {"Moving", {1, std::chrono::minutes(15)}}
+                    }}
                 }},
                 {"Station_0", ILog::MachineSummary{
                     {{
+                        // complette
                         {"Unloading", {5, std::chrono::minutes(25)}}
                     }},
-                    {}
+                    {
+                        // unfinished
+                    }
                 }}
             }}
         },
@@ -46,33 +53,90 @@ INSTANTIATE_TEST_SUITE_P(
             {{
                 {"Truck_0", ILog::MachineSummary{
                     {{
+                        // complette
                         {"Mining",    {5, std::chrono::hours(5)}},
                         {"Moving",    {9, std::chrono::minutes(270)}},
                         {"Arrived",   {5, std::chrono::minutes(0)}},
                         {"Unloading", {5, std::chrono::minutes(25)}}
                     }},
-                    {}
+                    {{
+                        // unfinished
+                        {"Moving", {1, std::chrono::minutes(5)}}
+                    }}
                 }},
                 {"Truck_1", ILog::MachineSummary{
                     {{
+                        // complette
                         {"Mining",    {5, std::chrono::hours(5)}},
                         {"Moving",    {9, std::chrono::minutes(270)}},
                         {"Arrived",   {5, std::chrono::minutes(0)}},
                         {"Unloading", {5, std::chrono::minutes(25)}}
                     }},
-                    {}
+                    {{
+                        // unfinished
+                        {"Moving", {1, std::chrono::minutes(5)}}
+                    }}
                 }},
                 {"Station_0", ILog::MachineSummary{
                     {{
+                        // complette
                         {"Unloading", {5, std::chrono::minutes(25)}}
                     }},
-                    {}
+                    {
+                        // unfinished
+                    }
                 }},
                 {"Station_1", ILog::MachineSummary{
                     {{
+                        // complette
                         {"Unloading", {5, std::chrono::minutes(25)}}
                     }},
-                    {}
+                    {
+                        // unfinished
+                    }
+                }}
+            }}
+        },
+        PredictedParams{  //test case 3
+            {2, 1, std::chrono::hours(10), oneHourTruckFactory}, // 2 trucks, 1 station
+            {{
+                
+                {"Truck_0", ILog::MachineSummary{
+                    {{
+                        // complette
+                        {"Mining",    {5, std::chrono::hours(5)}},
+                        {"Moving",    {9, std::chrono::minutes(270)}},
+                        {"Arrived",   {5, std::chrono::minutes(0)}},
+                        {"Unloading", {4, std::chrono::minutes(20)}},
+                        {"Waiting",   {1, std::chrono::minutes(5)}}
+                    }},
+                    {{
+                        // unfinished
+                        {"Unloading", {1, std::chrono::minutes(5)}}
+                    }}
+                }},
+                {"Truck_1", ILog::MachineSummary{
+                    {{
+                        // complette
+                        {"Mining",    {5, std::chrono::hours(5)}},
+                        {"Moving",    {9, std::chrono::minutes(270)}},
+                        {"Arrived",   {5, std::chrono::minutes(0)}},
+                        {"Unloading", {5, std::chrono::minutes(25)}}
+                    }},
+                    {{
+                        // unfinished
+                        {"Moving", {1, std::chrono::minutes(5)}}
+                    }}
+                }},
+                {"Station_0", ILog::MachineSummary{
+                    {{
+                        // complette
+                        {"Unloading", {9, std::chrono::minutes(45)}}
+                    }},
+                    {{
+                        // unfinished
+                        {"Unloading", {1, std::chrono::minutes(5)}}
+                    }}
                 }}
             }}
         }
@@ -105,6 +169,39 @@ TEST_P(PredictedTest, BasicSimulationRuns)
         }
     }
 }
+
+
+inline void PrintTo(const Helium3::Testing::PredictedParams& params, std::ostream* os) {
+    *os << "PredictedParams {\n"
+        << "  trucks   = " << params.simulatonParams.truckCount << ",\n"
+        << "  stations = " << params.simulatonParams.stationCount << ",\n"
+        << "  duration = " 
+        << std::chrono::duration_cast<std::chrono::hours>(params.simulatonParams.simulationLength).count() << "h,\n"
+        << "  expected = {\n";
+
+    for (const auto& [machineId, summary] : params.expectedSummary) {
+        *os << "    " << machineId << " => {\n";
+        *os << "      complette = {\n";
+        for (const auto& [state, stats] : summary.complette) {
+            *os << "        " << state
+                << ": (" << stats.occurrences << "x, "
+                << std::chrono::duration_cast<std::chrono::minutes>(stats.totalDuration).count() << "m)\n";
+        }
+        *os << "      },\n";
+        *os << "      unfinshed = {\n";
+        for (const auto& [state, stats] : summary.unfinshed) {
+            *os << "        " << state
+                << ": (" << stats.occurrences << "x, "
+                << std::chrono::duration_cast<std::chrono::minutes>(stats.totalDuration).count() << "m)\n";
+        }
+        *os << "      }\n";
+        *os << "    },\n";
+    }
+
+    *os << "  }\n"
+        << "}";
+}
+
 
 } // namespace Helium3::Testing
 

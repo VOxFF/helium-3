@@ -6,7 +6,6 @@
 
 #include "common/Time.h"
 
-#include <iostream> //temp
 #include <cassert>
 
 namespace Helium3 {
@@ -22,52 +21,68 @@ void Simulation::initialize(unsigned int truckCount, unsigned int stationCount)
     m_stationsManager->initialize(stationCount);
 }
 
+void Simulation::start(const Time& t) 
+{
+    for (auto* truck : m_trucksManager->trucks())
+        for (auto event : truck->startMining()) 
+        {
+            event.start = t;
+            m_eventQueue.push(event);
+        }
+}
+
 void Simulation::run(const Duration& simulationLength) 
 {
     auto startTime = Clock::now();
     auto endTime = startTime + simulationLength;
     auto curTime = startTime;
 
-    for(auto track : m_trucksManager->trucks())
-    {
-        for(auto event : track->startMining()) 
-        {
-            event.start = curTime; 
-            m_eventQueue.push(event);
-        }
-    }
-    while(!m_eventQueue.empty() && m_eventQueue.top().end() < endTime)
+    // Initialize the event loop
+    start(curTime);
+
+    // Process events until time expires or the event queue becomes empty
+    while (!m_eventQueue.empty() && m_eventQueue.top().end() < endTime)
     {
         auto event = m_eventQueue.top();
         m_eventQueue.pop();
 
-        m_log->add(event);
+        log().add(event);
 
         curTime = event.end();
         Events nextEvents;
-        if(event.state == MiningTruck::StateID::ArrivedToStation)
+
+        if (event.state == MiningTruck::StateID::ArrivedToStation)
         {
             auto station = m_stationsManager->getOptimalStation(curTime); assert(station);
             auto truck = m_trucksManager->truck(event.machineId); assert(truck);
-            nextEvents =  station->enqueue(truck);
+            nextEvents = station->enqueue(truck);
         }
-        else if(event.onExpiration)
+        else if (event.onExpiration)
         {
-            nextEvents =  event.onExpiration();
-            
+            nextEvents = event.onExpiration();
         }
+
         for (auto next : nextEvents) 
         {
             next.start = curTime;
             m_eventQueue.push(next);
         }
     }
-    std::cout << "queue size: " << m_eventQueue.size() << std::endl; //some items can still remain in queue after expiraton, uncomplette tasks
+
+    // It may happen that the time has expired, but there are still unfinished operations in the queue.
+    finish(endTime);
 }
 
-ILog& Simulation::log() const 
+void Simulation::finish(const Time& t) 
 {
-    return *m_log;
+    while (!m_eventQueue.empty())
+    {
+        auto event = m_eventQueue.top();
+        m_eventQueue.pop();
+
+        event.duration = t - event.start;
+        log().add(event, ILog::TaskState::Unfinished);
+    }
 }
 
 } // namespace Helium3

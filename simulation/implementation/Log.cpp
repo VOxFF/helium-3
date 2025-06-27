@@ -18,6 +18,7 @@ const ILog::MachineSummary UNDEFINED{
 void Log::add(const Event& e, TaskState taskState) 
 {
     if (m_level == Console) {
+        std::cout << (taskState == TaskState::Unfinished ? "X " : "  ");
         std::cout 
             << std::left
             << std::setw(10) << (e.machineId + ":")             // "Truck_0:"
@@ -25,7 +26,7 @@ void Log::add(const Event& e, TaskState taskState)
             << std::setw(8) << toString(e.start) << " -> "      // "19:21:40"
             << std::setw(8) << toString(e.end())  << " = "      // "19:26:40"
             << std::setw(6) << toString(e.duration)  << "  "    // "5m", "30m"
-            << e.message
+            << e.message + (taskState == TaskState::Unfinished ? " -- Unfinished" : "")
             << std::endl;
     }
 
