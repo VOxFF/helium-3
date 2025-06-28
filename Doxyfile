@@ -1,0 +1,25 @@
+# Project
+PROJECT_NAME           = "Helium-3"
+
+# Where to find the sources
+INPUT                  = simulation/
+RECURSIVE              = YES
+FILE_PATTERNS          = *.h *.hpp *.cpp
+
+# Extract undocumented/private symbols for completeness
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+
+# Only HTML output, drop the rest
+GENERATE_LATEX         = NO
+GENERATE_XML           = NO
+GENERATE_HTML          = YES
+
+# Place HTML files directly in docs/
+OUTPUT_DIRECTORY       = docs
+HTML_OUTPUT            = .
+
+# Nice tree view in the sidebar
+GENERATE_TREEVIEW      = YES
+FULL_PATH_NAMES        = NO

@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Build Helium",
+        "type": "shell",
+        "command": "bash",
+        "args": [
+          "-c",
+          "shopt -s globstar nullglob && mkdir -p build && clang++ -std=c++20 -g -I./simulation -I/usr/src/googletest/googletest/include -L/usr/src/googletest/googletest/lib ./main.cpp ./simulation/**/*.cpp ./testing/*.cpp -lgtest -lpthread -o build/main.app"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": ["$gcc"]
+      }
+    ]
+  }
+  
