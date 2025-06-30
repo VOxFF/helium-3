@@ -1,4 +1,4 @@
-# README
+# Helium-3 Mining
 
 ## General Approach
 
