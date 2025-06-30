@@ -21,7 +21,9 @@ This simulation framework follows an **event-driven architecture**: each truck a
 
 ## Documentation
 
-To generate documentation in `/docs` folder, run:
+[API Documentation](https://voxff.github.io/helium-3/)
+
+To generate documentation in local `/docs` folder, run:
 
 ```bash
 doxygen Doxyfile
