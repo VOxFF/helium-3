@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classHelium3_1_1IMachine.html" title="Abstract base class for all mechanical units in the Helium&#45;3 simulation." alt="" coords="5,31,149,57"/>
+<area shape="rect" id="node2" href="$classHelium3_1_1IStation.html" title="Abstract base for immobile facilities that service trucks." alt="" coords="197,5,332,32"/>
+<area shape="rect" id="node4" href="$classHelium3_1_1ITruck.html" title="Interface for all truck&#45;type machines in the simulation." alt="" coords="203,56,326,83"/>
+<area shape="rect" id="node3" href="$classHelium3_1_1UnloadingStation.html" title="A concrete implementation of an unloading station that can process one truck at a time and queue othe..." alt="" coords="380,5,577,32"/>
+<area shape="rect" id="node5" href="$classHelium3_1_1MiningTruck.html" title=" " alt="" coords="397,56,560,83"/>
+</map>

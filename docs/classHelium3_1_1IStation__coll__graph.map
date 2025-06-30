@@ -1,0 +1,4 @@
+<map id="Helium3::IStation" name="Helium3::IStation">
+<area shape="rect" id="node1" title="Abstract base for immobile facilities that service trucks." alt="" coords="10,80,145,107"/>
+<area shape="rect" id="node2" href="$classHelium3_1_1IMachine.html" title="Abstract base class for all mechanical units in the Helium&#45;3 simulation." alt="" coords="5,5,149,32"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="ITruck.h" name="ITruck.h">
+<area shape="rect" id="node1" title=" " alt="" coords="345,5,417,32"/>
+<area shape="rect" id="node2" href="$MiningTruck_8h.html" title=" " alt="" coords="109,80,221,107"/>
+<area shape="rect" id="node6" href="$Simulation_8h.html" title=" " alt="" coords="399,80,503,107"/>
+<area shape="rect" id="node7" href="$TrucksManager_8h.html" title=" " alt="" coords="245,80,375,107"/>
+<area shape="rect" id="node8" href="$UnloadingStation_8cpp.html" title=" " alt="" coords="528,80,689,107"/>
+<area shape="rect" id="node3" href="$MiningTruck_8cpp.html" title=" " alt="" coords="5,155,132,181"/>
+<area shape="rect" id="node4" href="$Simulation_8cpp.html" title=" " alt="" coords="328,155,447,181"/>
+<area shape="rect" id="node5" href="$TrucksManager_8cpp.html" title=" " alt="" coords="157,155,303,181"/>
+</map>

@@ -1,0 +1,28 @@
+var namespaceHelium3 =
+[
+    [ "Event", "structHelium3_1_1Event.html", "structHelium3_1_1Event" ],
+    [ "Log", "classHelium3_1_1Log.html", "classHelium3_1_1Log" ],
+    [ "MiningTruck", "classHelium3_1_1MiningTruck.html", "classHelium3_1_1MiningTruck" ],
+    [ "Simulation", "classHelium3_1_1Simulation.html", "classHelium3_1_1Simulation" ],
+    [ "StationManager", "classHelium3_1_1StationManager.html", "classHelium3_1_1StationManager" ],
+    [ "TrucksManager", "classHelium3_1_1TrucksManager.html", "classHelium3_1_1TrucksManager" ],
+    [ "UnloadingStation", "classHelium3_1_1UnloadingStation.html", "classHelium3_1_1UnloadingStation" ],
+    [ "ILog", "classHelium3_1_1ILog.html", "classHelium3_1_1ILog" ],
+    [ "IMachine", "classHelium3_1_1IMachine.html", "classHelium3_1_1IMachine" ],
+    [ "ISimulation", "classHelium3_1_1ISimulation.html", "classHelium3_1_1ISimulation" ],
+    [ "IStation", "classHelium3_1_1IStation.html", "classHelium3_1_1IStation" ],
+    [ "IStationManager", "classHelium3_1_1IStationManager.html", "classHelium3_1_1IStationManager" ],
+    [ "ITruck", "classHelium3_1_1ITruck.html", "classHelium3_1_1ITruck" ],
+    [ "ITrucksManager", "classHelium3_1_1ITrucksManager.html", "classHelium3_1_1ITrucksManager" ],
+    [ "Clock", "namespaceHelium3.html#ad5798331757219a0e48e8ea0d6652dd9", null ],
+    [ "Duration", "namespaceHelium3.html#a0fd4dcc0ddc7ee6270e09a4e08d55f1b", null ],
+    [ "EventCallback", "namespaceHelium3.html#abf13b63a5d2b34b1499a613d86f252ae", null ],
+    [ "Events", "namespaceHelium3.html#aee9c69d1fe3a414d3fd09ed600bf15aa", null ],
+    [ "State", "namespaceHelium3.html#a235c4850ada8b3c1870c71e9a23ecedc", null ],
+    [ "Time", "namespaceHelium3.html#a4c2250f1aad9d10de4454f96152ece6b", null ],
+    [ "TruckFactory", "namespaceHelium3.html#aa64f5922b41af275e3710f04f4643194", null ],
+    [ "operator+=", "namespaceHelium3.html#abfc0a634975a49037f59de110033e1a6", null ],
+    [ "operator+=", "namespaceHelium3.html#a7a20914e78c78894849d8bc7e0dc7c84", null ],
+    [ "toString", "namespaceHelium3.html#a4b3b5767586ac93e715b7488cc58a453", null ],
+    [ "toString", "namespaceHelium3.html#a37fead5de7f3e40475c1be5c85d9e272", null ]
+];

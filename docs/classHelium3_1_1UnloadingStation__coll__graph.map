@@ -1,0 +1,6 @@
+<map id="Helium3::UnloadingStation" name="Helium3::UnloadingStation">
+<area shape="rect" id="node1" title="A concrete implementation of an unloading station that can process one truck at a time and queue othe..." alt="" coords="50,171,247,197"/>
+<area shape="rect" id="node2" href="$classHelium3_1_1IStation.html" title="Abstract base for immobile facilities that service trucks." alt="" coords="5,81,140,108"/>
+<area shape="rect" id="node3" href="$classHelium3_1_1IMachine.html" title="Abstract base class for all mechanical units in the Helium&#45;3 simulation." alt="" coords="77,5,221,32"/>
+<area shape="rect" id="node4" href="$classHelium3_1_1ITruck.html" title="Interface for all truck&#45;type machines in the simulation." alt="" coords="165,81,287,108"/>
+</map>

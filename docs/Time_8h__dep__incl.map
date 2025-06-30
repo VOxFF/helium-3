@@ -1,0 +1,22 @@
+<map id="Time.h" name="Time.h">
+<area shape="rect" id="node1" title=" " alt="" coords="368,5,435,32"/>
+<area shape="rect" id="node2" href="$Event_8h.html" title="Time&#45;boxed action scheduled for a truck (used in the event queue)." alt="" coords="330,80,401,107"/>
+<area shape="rect" id="node4" href="$Simulation_8cpp.html" title=" " alt="" coords="122,304,241,331"/>
+<area shape="rect" id="node8" href="$IStation_8h.html" title=" " alt="" coords="593,155,677,181"/>
+<area shape="rect" id="node18" href="$IMachine_8h.html" title=" " alt="" coords="476,80,569,107"/>
+<area shape="rect" id="node19" href="$ISimulation_8h.html" title=" " alt="" coords="193,80,301,107"/>
+<area shape="rect" id="node20" href="$IStationManager_8h.html" title=" " alt="" coords="429,155,569,181"/>
+<area shape="rect" id="node3" href="$Simulation_8h.html" title=" " alt="" coords="145,229,249,256"/>
+<area shape="rect" id="node5" href="$ILog_8h.html" title=" " alt="" coords="145,155,207,181"/>
+<area shape="rect" id="node13" href="$ITruck_8h.html" title=" " alt="" coords="332,155,404,181"/>
+<area shape="rect" id="node6" href="$Log_8h.html" title=" " alt="" coords="13,229,70,256"/>
+<area shape="rect" id="node7" href="$Log_8cpp.html" title=" " alt="" coords="5,304,77,331"/>
+<area shape="rect" id="node9" href="$StationManager_8h.html" title=" " alt="" coords="615,229,751,256"/>
+<area shape="rect" id="node11" href="$UnloadingStation_8h.html" title=" " alt="" coords="775,229,921,256"/>
+<area shape="rect" id="node10" href="$StationManager_8cpp.html" title=" " alt="" coords="773,304,923,331"/>
+<area shape="rect" id="node12" href="$UnloadingStation_8cpp.html" title=" " alt="" coords="587,304,749,331"/>
+<area shape="rect" id="node14" href="$MiningTruck_8h.html" title=" " alt="" coords="428,229,540,256"/>
+<area shape="rect" id="node17" href="$TrucksManager_8h.html" title=" " alt="" coords="273,229,404,256"/>
+<area shape="rect" id="node15" href="$MiningTruck_8cpp.html" title=" " alt="" coords="437,304,563,331"/>
+<area shape="rect" id="node16" href="$TrucksManager_8cpp.html" title=" " alt="" coords="265,304,412,331"/>
+</map>

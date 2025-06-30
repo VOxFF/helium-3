@@ -1,0 +1,5 @@
+<map id="Helium3::ITruck" name="Helium3::ITruck">
+<area shape="rect" id="node1" title="Interface for all truck&#45;type machines in the simulation." alt="" coords="25,80,148,107"/>
+<area shape="rect" id="node3" href="$classHelium3_1_1MiningTruck.html" title=" " alt="" coords="5,155,168,181"/>
+<area shape="rect" id="node2" href="$classHelium3_1_1IMachine.html" title="Abstract base class for all mechanical units in the Helium&#45;3 simulation." alt="" coords="15,5,159,32"/>
+</map>
