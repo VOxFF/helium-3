@@ -33,3 +33,7 @@
 *.exe
 *.out
 *.app
+
+# GRPC generated 
+/grpc_logging/proto/
+

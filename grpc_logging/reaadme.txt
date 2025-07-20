@@ -1,0 +1,20 @@
+
+1) Generate c++ stubs
+
+protoc \
+  --proto_path=./proto \
+  --cpp_out=./proto/gen-cpp \
+  --grpc_out=./proto/gen-cpp \
+  --plugin=protoc-gen-grpc=$(which grpc_cpp_plugin) \
+  event.proto
+
+
+
+2) Generate Python stubs
+
+python -m grpc_tools.protoc \
+  --proto_path=./proto \
+  --python_out=./proto/gen-py \
+  --grpc_python_out=./proto/gen-py \
+  event.proto
+ 
