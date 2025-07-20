@@ -11,6 +11,7 @@
 #include <vector>
 #include <memory>
 #include <queue>
+#include <functional>
 
 namespace Helium3 {
 
@@ -25,7 +26,7 @@ public:
      *
      * @param factory Optional factory function used to create truck instances.
      */
-    Simulation(const TruckFactory& factory = {});
+    Simulation(const TruckFactory& = {}, const LogFactory& = {});
     virtual ~Simulation() = default;
 
     // --- From ISimulation ---

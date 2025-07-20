@@ -11,7 +11,13 @@
         "includePath": [
           "${workspaceFolder}/simulation",
           "${workspaceFolder}/testing",          
-          "${workspaceFolder}/**"                   
+          "${workspaceFolder}/**",
+          "${workspaceFolder}/grpc_logging/client",  
+          "${workspaceFolder}/grpc_logging/proto/gen-cpp",
+          "/usr/include",                                    
+          "/usr/local/include",                              
+          "/usr/include/grpcpp",                             
+          "/usr/include/google/protobuf"                                                
         ]
       }
     ]

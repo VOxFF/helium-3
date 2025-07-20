@@ -3,6 +3,7 @@
 #include "common/Event.h"
 
 #include <map>
+#include <memory>
 
 namespace Helium3 {
 
@@ -70,5 +71,7 @@ public:
     virtual const MachineSummary& summary(const std::string& machineId) const = 0;
 };
 
+
+using LogFactory = std::function<std::unique_ptr<ILog>()>;
 
 }   //end of namespace Helium3

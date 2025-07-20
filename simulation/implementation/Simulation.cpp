@@ -4,16 +4,17 @@
 #include "MiningTruck.h"
 #include "Log.h"
 
+
 #include "common/Time.h"
 
 #include <cassert>
 
 namespace Helium3 {
 
-Simulation::Simulation(const TruckFactory& factory) 
+Simulation::Simulation(const TruckFactory& trackFactory, const LogFactory& logFactory) 
 : m_stationsManager(std::make_unique<StationManager>())
-, m_trucksManager(std::make_unique<TrucksManager>(factory))
-, m_log(std::make_unique<Log>()) {}
+, m_trucksManager(std::make_unique<TrucksManager>(trackFactory))
+, m_log(logFactory ? logFactory() : std::make_unique<Log>()) {}
 
 void Simulation::initialize(unsigned int truckCount, unsigned int stationCount) 
 {
