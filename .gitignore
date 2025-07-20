@@ -35,4 +35,5 @@
 *.app
 
 # GRPC generated 
-/proto/
+/grpc_logging/proto/
+
